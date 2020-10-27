@@ -60,7 +60,6 @@ func (m *Mocker) alterTable(alterStmt nodes.AlterTableStmt) error {
 		switch cmd.Subtype {
 		case nodes.AT_AddColumn:
 			def := cmd.Def.(nodes.ColumnDef)
-			fmt.Printf("alter table colname %s\n", *def.Colname)
 			m.Tables[idx].TableElts.Items = append(m.Tables[idx].TableElts.Items, def)
 		case nodes.AT_DropColumn:
 			columnIdx := -1
