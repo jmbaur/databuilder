@@ -44,6 +44,7 @@ func (m *Mocker) createTable(table nodes.CreateStmt, ifNotExists bool) error {
 	return nil
 }
 
+// TODO: split this method out into different pieces
 func (m *Mocker) alterTable(alterStmt nodes.AlterTableStmt) error {
 	idx := m.findTable(*alterStmt.Relation.Relname)
 	if idx < 0 {
@@ -62,7 +63,23 @@ func (m *Mocker) alterTable(alterStmt nodes.AlterTableStmt) error {
 			fmt.Printf("alter table colname %s\n", *def.Colname)
 			m.Tables[idx].TableElts.Items = append(m.Tables[idx].TableElts.Items, def)
 		case nodes.AT_DropColumn:
-			fmt.Println("drop column")
+			columnIdx := -1
+			columns := m.Tables[idx].TableElts.Items
+			for i, item := range columns {
+				column, ok := item.(nodes.ColumnDef)
+				if !ok {
+					continue
+				}
+				if *column.Colname == *cmd.Name {
+					columnIdx = i
+				}
+			}
+			if columnIdx < 0 && cmd.MissingOk {
+				return nil
+			} else if columnIdx < 0 {
+				return fmt.Errorf("column to drop not found")
+			}
+			m.Tables[idx].TableElts.Items = append(columns[:columnIdx], columns[columnIdx+1:]...)
 		case nodes.AT_AddConstraint:
 			fmt.Println("add constraint")
 		case nodes.AT_DropConstraint:
