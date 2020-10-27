@@ -39,7 +39,40 @@ func (m *Mocker) createTable(table nodes.CreateStmt, ifNotExists bool) error {
 	if idx >= 0 && !ifNotExists {
 		return fmt.Errorf("table already exists")
 	}
+	// spew.Dump(table)
 	m.Tables = append(m.Tables, table)
+	return nil
+}
+
+func (m *Mocker) alterTable(alterStmt nodes.AlterTableStmt) error {
+	idx := m.findTable(*alterStmt.Relation.Relname)
+	if idx < 0 {
+		return fmt.Errorf("table not found")
+	}
+
+	for _, v := range alterStmt.Cmds.Items {
+		cmd, ok := v.(nodes.AlterTableCmd)
+		if !ok {
+			return fmt.Errorf("type assertion went bad to get alter table command")
+		}
+
+		switch cmd.Subtype {
+		case nodes.AT_AddColumn:
+			def := cmd.Def.(nodes.ColumnDef)
+			fmt.Printf("alter table colname %s\n", *def.Colname)
+			m.Tables[idx].TableElts.Items = append(m.Tables[idx].TableElts.Items, def)
+		case nodes.AT_DropColumn:
+			fmt.Println("drop column")
+		case nodes.AT_AddConstraint:
+			fmt.Println("add constraint")
+		case nodes.AT_DropConstraint:
+			fmt.Println("drop constraint")
+		default:
+			return fmt.Errorf("Alter table type not supported: %d\n", cmd.Subtype) // https://github.com/lfittl/pg_query_go/blob/master/nodes/alter_table_type.go
+		}
+
+	}
+
 	return nil
 }
 

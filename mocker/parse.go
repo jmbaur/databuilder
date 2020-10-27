@@ -82,7 +82,10 @@ func (m *Mocker) Parse(input io.Reader) {
 			}
 		case nodes.AlterTableStmt:
 			alter := stmt.Stmt.(nodes.AlterTableStmt)
-			fmt.Println("alter", *alter.Relation.Relname)
+			err := m.alterTable(alter)
+			if err != nil {
+				log.Printf("Could not alter table \"%s\": %v\n", *alter.Relation.Relname, err)
+			}
 		default:
 			continue
 		}
