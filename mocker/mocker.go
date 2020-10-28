@@ -80,7 +80,23 @@ func (m *Mocker) alterTable(alterStmt nodes.AlterTableStmt) error {
 			}
 			m.Tables[idx].TableElts.Items = append(columns[:columnIdx], columns[columnIdx+1:]...)
 		case nodes.AT_AddConstraint:
-			fmt.Println("add constraint")
+			constraint := cmd.Def.(nodes.Constraint)
+			constraints := m.Tables[idx].Constraints.Items
+
+			idxConstr := -1
+			for i, constr := range constraints {
+				c := constr.(nodes.Constraint)
+				if *c.Conname == *constraint.Conname {
+					idxConstr = i
+				}
+			}
+
+			if idxConstr < 0 {
+				m.Tables[idx].Constraints.Items = append(constraints, constraint)
+			} else {
+				m.Tables[idx].Constraints.Items[idxConstr] = constraint
+			}
+
 		case nodes.AT_DropConstraint:
 			fmt.Println("drop constraint")
 		default:
@@ -126,6 +142,27 @@ func (m *Mocker) findTable(tableName string) int {
 			idx = i
 		}
 	}
+	return idx
+}
+
+func (m *Mocker) findColumn(tableIdx int, columnName string) int {
+	idx := -1
+	columns := m.Tables[tableIdx].TableElts.Items
+	for i, column := range columns {
+		def, ok := column.(nodes.ColumnDef)
+		if !ok {
+			return -1
+		}
+		if *def.Colname == columnName {
+			fmt.Println("HIT")
+			idx = i
+		}
+	}
+	return idx
+}
+
+func (m *Mocker) findConstraint(conName string) int {
+	idx := -1
 	return idx
 }
 

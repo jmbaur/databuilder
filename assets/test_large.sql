@@ -426,7 +426,7 @@ CREATE TABLE IF NOT EXISTS zoho_exceptions (
   error JSON
 );
 CREATE TABLE "session" (
-  "sid" varchar NOT NULL COLLATE "default",
+	"sid" varchar NOT NULL COLLATE "default",
 	"sess" json NOT NULL,
 	"expire" timestamp(6) NOT NULL
 )
