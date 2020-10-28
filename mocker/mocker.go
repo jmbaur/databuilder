@@ -62,43 +62,31 @@ func (m *Mocker) alterTable(alterStmt nodes.AlterTableStmt) error {
 			def := cmd.Def.(nodes.ColumnDef)
 			m.Tables[idx].TableElts.Items = append(m.Tables[idx].TableElts.Items, def)
 		case nodes.AT_DropColumn:
-			columnIdx := -1
-			columns := m.Tables[idx].TableElts.Items
-			for i, item := range columns {
-				column, ok := item.(nodes.ColumnDef)
-				if !ok {
-					continue
-				}
-				if *column.Colname == *cmd.Name {
-					columnIdx = i
-				}
-			}
+			columnIdx := m.findColumn(idx, *cmd.Name)
 			if columnIdx < 0 && cmd.MissingOk {
 				return nil
 			} else if columnIdx < 0 {
 				return fmt.Errorf("column to drop not found")
 			}
+			columns := m.Tables[idx].TableElts.Items
 			m.Tables[idx].TableElts.Items = append(columns[:columnIdx], columns[columnIdx+1:]...)
 		case nodes.AT_AddConstraint:
 			constraint := cmd.Def.(nodes.Constraint)
-			constraints := m.Tables[idx].Constraints.Items
-
-			idxConstr := -1
-			for i, constr := range constraints {
-				c := constr.(nodes.Constraint)
-				if *c.Conname == *constraint.Conname {
-					idxConstr = i
-				}
-			}
-
+			idxConstr := m.findConstraint(idx, *constraint.Conname)
 			if idxConstr < 0 {
-				m.Tables[idx].Constraints.Items = append(constraints, constraint)
+				m.Tables[idx].Constraints.Items = append(m.Tables[idx].Constraints.Items, constraint)
 			} else {
 				m.Tables[idx].Constraints.Items[idxConstr] = constraint
 			}
-
 		case nodes.AT_DropConstraint:
-			fmt.Println("drop constraint")
+			idxConstr := m.findConstraint(idx, *cmd.Name)
+			if idxConstr < 0 && cmd.MissingOk {
+				return nil
+			} else if idxConstr < 0 {
+				return fmt.Errorf("could not find constraint")
+			}
+			constraints := m.Tables[idx].Constraints.Items
+			m.Tables[idx].Constraints.Items = append(constraints[:idxConstr], constraints[idxConstr+1:]...)
 		default:
 			return fmt.Errorf("Alter table type not supported: %d\n", cmd.Subtype) // https://github.com/lfittl/pg_query_go/blob/master/nodes/alter_table_type.go
 		}
@@ -148,21 +136,28 @@ func (m *Mocker) findTable(tableName string) int {
 func (m *Mocker) findColumn(tableIdx int, columnName string) int {
 	idx := -1
 	columns := m.Tables[tableIdx].TableElts.Items
-	for i, column := range columns {
-		def, ok := column.(nodes.ColumnDef)
+	for i, item := range columns {
+		column, ok := item.(nodes.ColumnDef)
 		if !ok {
+			// might be a constraint `nodes.Constraint`
 			return -1
 		}
-		if *def.Colname == columnName {
-			fmt.Println("HIT")
+		if *column.Colname == columnName {
 			idx = i
 		}
 	}
 	return idx
 }
 
-func (m *Mocker) findConstraint(conName string) int {
+func (m *Mocker) findConstraint(tableIdx int, conName string) int {
 	idx := -1
+	constraints := m.Tables[tableIdx].Constraints.Items
+	for i, constr := range constraints {
+		c := constr.(nodes.Constraint)
+		if *c.Conname == conName {
+			idx = i
+		}
+	}
 	return idx
 }
 
