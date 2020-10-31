@@ -2,24 +2,17 @@ package mocker
 
 import (
 	"fmt"
+	"log"
 
 	nodes "github.com/lfittl/pg_query_go/nodes"
 )
-
-type enum struct {
-	name string
-	vals []string
-}
 
 // Mocker is used for parsing SQL statements as well as mocking data
 type Mocker struct {
 	DBConStr string
 	Tables   []nodes.CreateStmt
-	Enums    []enum
+	Enums    []nodes.CreateEnumStmt
 }
-
-var tables []nodes.CreateStmt
-var enums []enum
 
 // New initializes a Mocker object for use with parsing SQL statements
 func New(conStr string) *Mocker {
@@ -28,9 +21,6 @@ func New(conStr string) *Mocker {
 	}
 }
 
-// CreateTable adds a table to the mocker slice that will be mocked after all
-// table definitions have been initialized and after all table alterations
-// have been read.
 func (m *Mocker) createTable(table nodes.CreateStmt, ifNotExists bool) error {
 	idx := m.findTable(*table.Relation.Relname)
 	if idx >= 0 && ifNotExists {
@@ -44,7 +34,6 @@ func (m *Mocker) createTable(table nodes.CreateStmt, ifNotExists bool) error {
 	return nil
 }
 
-// TODO: split this method out into different pieces
 func (m *Mocker) alterTable(alterStmt nodes.AlterTableStmt) error {
 	idx := m.findTable(*alterStmt.Relation.Relname)
 	if idx < 0 {
@@ -96,13 +85,8 @@ func (m *Mocker) alterTable(alterStmt nodes.AlterTableStmt) error {
 	return nil
 }
 
-// DropTable removes the table from the tables slice. It should be used when
-// the "DROP" statement is made or when an "INSERT INTO" statement is made.
-func (m *Mocker) dropTable(tableName string, missingOk bool) error {
+func (m *Mocker) dropTable(tableName string) error {
 	idx := m.findTable(tableName)
-	if idx < 0 && missingOk {
-		return nil
-	}
 	if idx < 0 {
 		return fmt.Errorf("table not found")
 	}
@@ -110,17 +94,25 @@ func (m *Mocker) dropTable(tableName string, missingOk bool) error {
 	return nil
 }
 
-// CreateEnums adds an enum type to the mocker slice that will be mocked after
-// all SQL definitions have been read.
-func (m *Mocker) createEnums(enumName string, enumVals []string) error {
-	newEnum := enum{name: enumName, vals: enumVals}
-	idx := m.findEnum(enumName)
-	if idx < 0 {
-		m.Enums = append(m.Enums, newEnum)
-	} else {
-		m.Enums[idx] = newEnum
-	}
+func (m *Mocker) createEnum(enum nodes.CreateEnumStmt) error {
+	m.Enums = append(m.Enums, enum)
 	return nil
+}
+
+func (m *Mocker) findEnum(name string) int {
+	idx := -1
+	for i, enum := range m.Enums {
+		for _, v := range enum.TypeName.Items {
+			enumName, ok := v.(nodes.String)
+			if !ok {
+				log.Printf("Could not use type assertion for pg_query.String, actual type: %T\n", v)
+			}
+			if enumName.Str == name {
+				idx = i
+			}
+		}
+	}
+	return idx
 }
 
 func (m *Mocker) findTable(tableName string) int {
@@ -161,12 +153,7 @@ func (m *Mocker) findConstraint(tableIdx int, conName string) int {
 	return idx
 }
 
-func (m *Mocker) findEnum(enumName string) int {
-	idx := -1
-	for i, enum := range m.Enums {
-		if enum.name == enumName {
-			idx = i
-		}
-	}
-	return idx
+func (m *Mocker) dropEnum(enumName string) error {
+	// spew.Dump(m.Enums)
+	return nil
 }

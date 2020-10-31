@@ -454,10 +454,6 @@ DROP TYPE IF EXISTS funding_sources;
 DROP TABLE IF EXISTS adults;
 DROP TABLE IF EXISTS states;
 
-DROP TABLE pw_enrollments;
-DROP TABLE temp_guides;
-DROP TABLE users;
-
 DROP EXTENSION btree_gist;
 DROP EXTENSION pgcrypto;-- DROP VIEW IF EXISTS students_view;
 DROP TABLE IF EXISTS attendance;
