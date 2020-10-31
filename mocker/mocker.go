@@ -2,7 +2,6 @@ package mocker
 
 import (
 	"fmt"
-	"log"
 
 	nodes "github.com/lfittl/pg_query_go/nodes"
 )
@@ -103,11 +102,11 @@ func (m *Mocker) findEnum(name string) int {
 	idx := -1
 	for i, enum := range m.Enums {
 		for _, v := range enum.TypeName.Items {
-			enumName, ok := v.(nodes.String)
+			str, ok := v.(nodes.String)
 			if !ok {
-				log.Printf("Could not use type assertion for pg_query.String, actual type: %T\n", v)
+				continue
 			}
-			if enumName.Str == name {
+			if str.Str == name {
 				idx = i
 			}
 		}
@@ -153,7 +152,13 @@ func (m *Mocker) findConstraint(tableIdx int, conName string) int {
 	return idx
 }
 
-func (m *Mocker) dropEnum(enumName string) error {
-	// spew.Dump(m.Enums)
+func (m *Mocker) dropEnum(name string) error {
+	idx := m.findEnum(name)
+	if idx < 0 {
+		return fmt.Errorf("Could not find enum %s", name)
+	} else {
+		enums := m.Enums
+		m.Enums = append(enums[:idx], enums[idx+1:]...)
+	}
 	return nil
 }
