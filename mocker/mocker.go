@@ -129,9 +129,8 @@ func (m *Mocker) findColumn(tableIdx int, columnName string) int {
 	columns := m.Tables[tableIdx].TableElts.Items
 	for i, item := range columns {
 		column, ok := item.(nodes.ColumnDef)
-		if !ok {
-			// might be a constraint `nodes.Constraint`
-			return -1
+		if !ok { // is of type `nodes.Constraint`
+			continue
 		}
 		if *column.Colname == columnName {
 			idx = i
