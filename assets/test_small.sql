@@ -21,7 +21,6 @@ CREATE TABLE IF NOT EXISTS users (
 ); -- test comment on a table statement
 
 ALTER TABLE users ADD COLUMN expiration timestamp;
-
 ALTER TABLE users DROP COLUMN expiration;
 
 CREATE TABLE IF NOT EXISTS temp_guides (
