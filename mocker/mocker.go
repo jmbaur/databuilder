@@ -48,7 +48,8 @@ func (m *Mocker) alterTable(alterStmt nodes.AlterTableStmt) error {
 		switch cmd.Subtype {
 		case nodes.AT_AddColumn:
 			def := cmd.Def.(nodes.ColumnDef)
-			m.Tables[idx].TableElts.Items = append(m.Tables[idx].TableElts.Items, def)
+			columns := m.Tables[idx].TableElts.Items
+			m.Tables[idx].TableElts.Items = append(columns, def)
 		case nodes.AT_DropColumn:
 			columnIdx := m.findColumn(idx, *cmd.Name)
 			if columnIdx < 0 && cmd.MissingOk {
@@ -129,9 +130,8 @@ func (m *Mocker) findColumn(tableIdx int, columnName string) int {
 	columns := m.Tables[tableIdx].TableElts.Items
 	for i, item := range columns {
 		column, ok := item.(nodes.ColumnDef)
-		if !ok {
-			// might be a constraint `nodes.Constraint`
-			return -1
+		if !ok { // is a `nodes.ConstraintDef`
+			continue
 		}
 		if *column.Colname == columnName {
 			idx = i

@@ -20,8 +20,9 @@ CREATE TABLE IF NOT EXISTS users (
     CHECK (username != '' AND pwdhash != '' AND first_name != '' AND last_name != '' AND email != '')
 ); -- test comment on a table statement
 
-ALTER TABLE users
-DROP COLUMN expiration;
+ALTER TABLE users ADD COLUMN expiration timestamp;
+
+ALTER TABLE users DROP COLUMN expiration;
 
 CREATE TABLE IF NOT EXISTS temp_guides (
   id SERIAL PRIMARY KEY,
