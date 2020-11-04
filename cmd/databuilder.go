@@ -13,6 +13,11 @@ import (
 
 func Execute() {
 	m := mocker.New("tmp")
+
+	filestat, _ := os.Stdin.Stat()
+	if filestat.Size() <= 0 {
+		log.Fatal("no data passed in through standard input")
+	}
 	m.Parse(os.Stdin)
 
 	connString := flag.String("connection", "postgres://localhost:5432", "connection string to the database")
