@@ -11,7 +11,7 @@ cmd = "go build -o ./tmp/main ."
 # Binary file yields from `cmd`.
 bin = "tmp/main"
 # Customize binary.
-full_bin = "cat assets/test_large.sql | ./tmp/main --connection=postgres://prenda_user:password@ubuntuvm/prenda_db --ignoreTables=.*dump --amount=10"
+full_bin = "cat assets/test_large.sql | ./tmp/main --connection=postgres://prenda_user:password@fedoravm/prenda_db --ignoreTables=.*dump --amount=10"
 # Watch these filename extensions.
 include_ext = ["go"]
 # Ignore these filename extensions or directories.

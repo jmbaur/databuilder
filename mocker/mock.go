@@ -4,17 +4,15 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
+	"math/rand"
 	"regexp"
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/brianvoe/gofakeit/v5"
 	"github.com/jackc/pgx/v4"
 	nodes "github.com/lfittl/pg_query_go/nodes"
 )
-
-var foreignkeys = make(map[string][]interface{})
 
 type Config struct {
 	IgnoreTables []string // tables to ignore
@@ -46,11 +44,11 @@ func (c *Config) tableSkip(tableName string) bool {
 type widget map[string]interface{}
 
 func (m *Mocker) Mock(conn *pgx.Conn, config *Config) error {
-	gofakeit.Seed(0)
-
 	if err := config.prep(); err != nil {
 		return err
 	}
+
+	gofakeit.Seed(time.Now().UnixNano())
 
 	for _, table := range m.Tables {
 
@@ -75,8 +73,6 @@ func (m *Mocker) Mock(conn *pgx.Conn, config *Config) error {
 
 					var columnValue interface{}
 
-					getConstraints(conn, column.Constraints.Items)
-
 					switch columnType {
 					case "text":
 						columnValue = generateText(columnName, column.IsNotNull)
@@ -90,8 +86,15 @@ func (m *Mocker) Mock(conn *pgx.Conn, config *Config) error {
 						columnValue = "[" + date1.Format(time.RFC3339) + "," + date2.Format(time.RFC3339) + "]"
 					case "pg_catalog":
 						// foreign table reference
-						// columnValue = getRandomForeignRefValue(conn, column.Constraints.Items)
-						// fmt.Println(columnValue)
+						constraints := column.Constraints.Items
+						constrIndex := findForeignConstraint(constraints)
+						if constrIndex < 0 {
+							continue
+						}
+						foreigncolumn := constraints[constrIndex].(nodes.Constraint).PkAttrs.Items[0].(nodes.String).Str
+						foreigntable := *constraints[constrIndex].(nodes.Constraint).Pktable.Relname
+
+						columnValue = getRandomForeignRefValue(conn, foreigntable, foreigncolumn)
 						continue
 					case "serial":
 						continue
@@ -100,9 +103,16 @@ func (m *Mocker) Mock(conn *pgx.Conn, config *Config) error {
 							Status string `json:"status"`
 						}{Status: "JSON is not yet implemented."})
 						columnValue = json
+					case "bytea":
+						continue
 					default:
-						// fmt.Println(columnType)
-						// try to find enum
+						// is most likely an enum type
+						enumIndex := findEnumDef(m.Enums, columnType)
+						if enumIndex < 0 {
+							log.Printf("could not find enum %s\n", columnType)
+							continue
+						}
+						columnValue = getRandomEnumValue(m.Enums, enumIndex)
 					}
 					w[columnName] = columnValue
 				}
@@ -117,111 +127,42 @@ func (m *Mocker) Mock(conn *pgx.Conn, config *Config) error {
 	return nil
 }
 
-func generateText(column string, isNotNull bool) string {
-	column = strings.ToLower(column)
-
-	if strings.HasPrefix(column, "id") || strings.HasSuffix(column, "id") {
-		return strconv.Itoa(gofakeit.Number(0, 5000))
-	}
-
-	if strings.Contains(column, "name") {
-		if strings.Contains(column, "first") {
-			return gofakeit.FirstName()
+func findEnumDef(enums []nodes.CreateEnumStmt, enumName string) int {
+	idx := -1
+	for i, enum := range enums {
+		if enum.TypeName.Items[0].(nodes.String).Str == enumName {
+			idx = i
 		}
-		if strings.Contains(column, "last") {
-			return gofakeit.LastName()
-		}
-		return gofakeit.Name()
 	}
-
-	if strings.Contains(column, "email") {
-		return gofakeit.Email()
-	}
-
-	if strings.HasPrefix(column, "ip") || strings.HasSuffix(column, "ip") {
-		return gofakeit.IPv4Address()
-	}
-
-	if strings.Contains(column, "address") {
-		return gofakeit.Street()
-	}
-
-	if strings.Contains(column, "city") {
-		return gofakeit.City()
-	}
-
-	if strings.Contains(column, "zip") {
-		return gofakeit.Zip()
-	}
-
-	if strings.Contains(column, "state") {
-		return gofakeit.StateAbr()
-	}
-
-	if strings.Contains(column, "country") {
-		return gofakeit.CountryAbr()
-	}
-
-	if strings.Contains(column, "phone") {
-		return gofakeit.Phone()
-	}
-
-	if strings.Contains(column, "gender") {
-		return gofakeit.Gender()
-	}
-
-	if strings.Contains(column, "language") {
-		return gofakeit.Language()
-	}
-
-	if strings.Contains(column, "note") {
-		return gofakeit.LoremIpsumSentence(10)
-	}
-
-	// if strings.Contains(column, "hash") {
-	// 	return gofakeit.Password()
-	// }
-
-	if isNotNull {
-		return gofakeit.LoremIpsumWord()
-	}
-
-	return ""
+	return idx
 }
 
-func getConstraints(conn *pgx.Conn, constraints []nodes.Node) error {
-	// var constrs []nodes.ConstrType
-	for _, c := range constraints {
+func getRandomEnumValue(enums []nodes.CreateEnumStmt, indexOfEnum int) interface{} {
+	choices := enums[indexOfEnum].Vals.Items
+	idx := rand.Intn(len(choices))
+	return choices[idx].(nodes.String).Str
+}
+
+func findForeignConstraint(columnConstraints []nodes.Node) int {
+	idx := -1
+	for i, c := range columnConstraints {
 		constraint, ok := c.(nodes.Constraint)
 		if !ok {
-			return fmt.Errorf("not a constraint")
+			log.Println("not a constraint")
 		}
-		switch constraint.Contype {
-		case nodes.CONSTR_NOTNULL:
-			// fmt.Println("not null")
-			continue
-		case nodes.CONSTR_FOREIGN:
-			foreigncolumn := constraint.PkAttrs.Items[0].(nodes.String).Str
-			foreigntable := *constraint.Pktable.Relname
-			if _, ok := foreignkeys[foreigntable+foreigncolumn]; ok {
-				// already has values
-				continue
-			} else {
-				// get & set values
-				query := "SELECT" + foreigncolumn + "FROM" + foreigntable
-				var vals []interface{}
-				conn.Query(context.Background(), query, &vals)
-				foreignkeys[foreigntable+foreigncolumn] = vals
-			}
-		default:
-			return fmt.Errorf("constraint %d not supported", constraint.Contype)
+		if constraint.Contype == nodes.CONSTR_FOREIGN {
+			idx = i
 		}
 	}
-	return nil
+	return idx
 }
 
-func getRandomForeignRefValue(conn *pgx.Conn) interface{} {
+func getRandomForeignRefValue(conn *pgx.Conn, foreigntable, foreigncolumn string) interface{} {
+	row := conn.QueryRow(context.Background(), fmt.Sprintf("SELECT %s FROM %s ORDER BY RANDOM() LIMIT 1", foreigncolumn, foreigntable))
 	var val interface{}
-	conn.Query(context.Background(), "select now()", &val)
+	err := row.Scan(&val)
+	if err != nil {
+		log.Println(err)
+	}
 	return val
 }
