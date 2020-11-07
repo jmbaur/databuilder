@@ -58,11 +58,16 @@ func (m *Mocker) Mock(config *Config) error {
 			done <- nil // we do not want to block the first insert into the table
 		}()
 
+		var i, errors int
 		var columns []string
-		i := 0
 		for i < config.Amount {
+			if errors > config.Amount {
+				break // stop trying to make these
+			}
+
 			var w []interface{}
 			for _, tableElement := range table.TableElts.Items {
+
 				column, okColumn := tableElement.(nodes.ColumnDef)
 				if !okColumn {
 					continue
@@ -73,10 +78,29 @@ func (m *Mocker) Mock(config *Config) error {
 				}
 
 				columnName := *column.Colname
-				columnType := column.TypeName.Names.Items[0].(nodes.String).Str
+				var columnType string
+				var foreigncolumn, foreigntable *string
+				for _, t := range column.TypeName.Names.Items {
+					columnType = t.(nodes.String).Str
+					if columnType == "pg_catalog" {
+						constraints := column.Constraints.Items
+						constrIndex := findForeignConstraint(constraints)
+						if constrIndex < 0 {
+							continue
+						}
+						tmpForCol := constraints[constrIndex].(nodes.Constraint).PkAttrs.Items[0].(nodes.String).Str
+						foreigncolumn = &tmpForCol
+						foreigntable = constraints[constrIndex].(nodes.Constraint).Pktable.Relname
+						break
+					}
+				}
 
 				var columnValue interface{}
 				switch columnType {
+				case "int4": // "signed 4-byte integer "https://www.postgresql.org/docs/8.1/datatype.html
+					columnValue = gofakeit.Uint32()
+				case "bool":
+					columnValue = gofakeit.Bool()
 				case "text":
 					columnValue = generateText(columnName, column.IsNotNull)
 				case "date":
@@ -88,18 +112,9 @@ func (m *Mocker) Mock(config *Config) error {
 					date2 := date1.Add(time.Duration(gofakeit.Number(1, 10000)) * time.Hour)
 					columnValue = "[" + date1.Format(time.RFC3339) + "," + date2.Format(time.RFC3339) + "]"
 				case "pg_catalog":
-					// foreign table reference
-					constraints := column.Constraints.Items
-					constrIndex := findForeignConstraint(constraints)
-					if constrIndex < 0 {
-						continue
-					}
-					foreigncolumn := constraints[constrIndex].(nodes.Constraint).PkAttrs.Items[0].(nodes.String).Str
-					foreigntable := *constraints[constrIndex].(nodes.Constraint).Pktable.Relname
-
-					columnValue = getRandomForeignRefValue(foreigntable, foreigncolumn)
-					continue
+					columnValue = getRandomForeignRefValue(*foreigntable, *foreigncolumn)
 				case "serial":
+					// these are created by postgres on insert
 					continue
 				case "json":
 					json, _ := json.Marshal(struct {
@@ -132,6 +147,7 @@ func (m *Mocker) Mock(config *Config) error {
 
 			prevErr := <-done
 			if prevErr != nil {
+				errors++
 				continue // try to make again
 			}
 			go db.MakeInsert(done, *insert, w...)
