@@ -6,6 +6,7 @@ require (
 	github.com/brianvoe/gofakeit v2.2.0+incompatible
 	github.com/brianvoe/gofakeit/v5 v5.10.1
 	github.com/davecgh/go-spew v1.1.1
+	github.com/fatih/color v1.10.0
 	github.com/jackc/pgx v3.6.2+incompatible
 	github.com/jackc/pgx/v4 v4.9.1
 	github.com/lfittl/pg_query_go v1.0.0

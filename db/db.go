@@ -2,10 +2,10 @@ package db
 
 import (
 	"context"
-	"log"
 
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/jmbaur/databuilder/logg"
 )
 
 var db *pgxpool.Pool
@@ -22,7 +22,7 @@ func GetConnection(connString string) error {
 func MakeInsert(done chan<- error, query string, queryparams ...interface{}) {
 	rows, err := db.Query(context.Background(), query, queryparams...)
 	if err != nil {
-		log.Println(err)
+		logg.Printf(logg.Info, "%v\n", err)
 		done <- err
 	}
 	defer rows.Close()

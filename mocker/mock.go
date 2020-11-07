@@ -3,7 +3,6 @@ package mocker
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"math/rand"
 	"regexp"
 	"strconv"
@@ -11,6 +10,7 @@ import (
 
 	"github.com/brianvoe/gofakeit/v5"
 	"github.com/jmbaur/databuilder/db"
+	"github.com/jmbaur/databuilder/logg"
 	nodes "github.com/lfittl/pg_query_go/nodes"
 )
 
@@ -59,7 +59,8 @@ func (m *Mocker) Mock(config *Config) error {
 		}()
 
 		var columns []string
-		for i := 0; i < config.Amount; i++ {
+		i := 0
+		for i < config.Amount {
 			var w []interface{}
 			for _, tableElement := range table.TableElts.Items {
 				column, okColumn := tableElement.(nodes.ColumnDef)
@@ -75,7 +76,6 @@ func (m *Mocker) Mock(config *Config) error {
 				columnType := column.TypeName.Names.Items[0].(nodes.String).Str
 
 				var columnValue interface{}
-
 				switch columnType {
 				case "text":
 					columnValue = generateText(columnName, column.IsNotNull)
@@ -112,7 +112,7 @@ func (m *Mocker) Mock(config *Config) error {
 					// is most likely an enum type
 					enumIndex := findEnumDef(m.Enums, columnType)
 					if enumIndex < 0 {
-						log.Printf("could not find enum %s\n", columnType)
+						logg.Printf(logg.Warn, "Could not find enum %s\n", columnType)
 						continue
 					}
 					columnValue = getRandomEnumValue(m.Enums, enumIndex)
@@ -124,21 +124,18 @@ func (m *Mocker) Mock(config *Config) error {
 			}
 			// insert into  table
 			insert, err := buildInsertStmt(columns, *table.Relation.Relname)
-
-			// TODO this regexp is just a temp test
-			re, _ := regexp.Compile("\\$[0-9]")
-			newInsert := re.ReplaceAllString(*insert, "%v")
-			fmt.Printf(newInsert+"\n", w...)
-
 			if err != nil {
-				log.Printf("failed to build insert statement for table \"%s\": %v", *table.Relation.Relname, err)
+				logg.Printf(logg.Warn, "Failed to build insert statement for table \"%s\": %v\n", *table.Relation.Relname, err)
+				i++
 				continue
 			}
+
 			prevErr := <-done
 			if prevErr != nil {
-				i-- // if the last query made an error, try again
+				continue // try to make again
 			}
 			go db.MakeInsert(done, *insert, w...)
+			i++
 		}
 	}
 	return nil
@@ -165,7 +162,7 @@ func findForeignConstraint(columnConstraints []nodes.Node) int {
 	for i, c := range columnConstraints {
 		constraint, ok := c.(nodes.Constraint)
 		if !ok {
-			log.Println("not a constraint")
+			logg.Printf(logg.Warn, "Not a constraint: %v\n", c)
 		}
 		if constraint.Contype == nodes.CONSTR_FOREIGN {
 			idx = i
@@ -179,7 +176,7 @@ func getRandomForeignRefValue(foreigntable, foreigncolumn string) interface{} {
 	var val interface{}
 	err := row.Scan(&val)
 	if err != nil {
-		log.Println(err)
+		logg.Printf(logg.Warn, "%v\n", err)
 	}
 	return val
 }

@@ -2,11 +2,11 @@ package cmd
 
 import (
 	"flag"
-	"log"
 	"os"
 	"strings"
 
 	"github.com/jmbaur/databuilder/db"
+	"github.com/jmbaur/databuilder/logg"
 	"github.com/jmbaur/databuilder/mocker"
 )
 
@@ -15,7 +15,8 @@ func Execute() {
 
 	filestat, _ := os.Stdin.Stat()
 	if filestat.Size() <= 0 {
-		log.Fatal("no data passed in through standard input")
+		logg.Printf(logg.Fatal, "No SQL passed through standard input\n")
+		os.Exit(1)
 	}
 	m.Parse(os.Stdin)
 
@@ -26,7 +27,8 @@ func Execute() {
 
 	err := db.GetConnection(*connString)
 	if err != nil {
-		log.Fatalf("unable to connect to database: %v", err)
+		logg.Printf(logg.Fatal, "Unable to connect to database: %v\n", err)
+		os.Exit(2)
 	}
 	defer db.Close()
 
@@ -35,6 +37,7 @@ func Execute() {
 		Amount:       *amount,
 	}
 	if err := m.Mock(mockConfig); err != nil {
-		log.Fatalf("unable to mock the database: %v", err)
+		logg.Printf(logg.Fatal, "Unable to mock the database: %v\n", err)
+		os.Exit(3)
 	}
 }
