@@ -1,7 +1,6 @@
 package mocker
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -11,7 +10,7 @@ import (
 	"time"
 
 	"github.com/brianvoe/gofakeit/v5"
-	"github.com/jackc/pgx/v4"
+	"github.com/jmbaur/databuilder/db"
 	nodes "github.com/lfittl/pg_query_go/nodes"
 )
 
@@ -42,7 +41,7 @@ func (c *Config) tableSkip(tableName string) bool {
 	return skip
 }
 
-func (m *Mocker) Mock(conn *pgx.Conn, config *Config) error {
+func (m *Mocker) Mock(config *Config) error {
 	if err := config.prep(); err != nil {
 		return err
 	}
@@ -53,6 +52,11 @@ func (m *Mocker) Mock(conn *pgx.Conn, config *Config) error {
 		if config.tableSkip(*table.Relation.Relname) {
 			continue
 		}
+
+		done := make(chan error)
+		go func() {
+			done <- nil // we do not want to block the first insert into the table
+		}()
 
 		var columns []string
 		for i := 0; i < config.Amount; i++ {
@@ -93,7 +97,7 @@ func (m *Mocker) Mock(conn *pgx.Conn, config *Config) error {
 					foreigncolumn := constraints[constrIndex].(nodes.Constraint).PkAttrs.Items[0].(nodes.String).Str
 					foreigntable := *constraints[constrIndex].(nodes.Constraint).Pktable.Relname
 
-					columnValue = getRandomForeignRefValue(conn, foreigntable, foreigncolumn)
+					columnValue = getRandomForeignRefValue(foreigntable, foreigncolumn)
 					continue
 				case "serial":
 					continue
@@ -120,16 +124,21 @@ func (m *Mocker) Mock(conn *pgx.Conn, config *Config) error {
 			}
 			// insert into  table
 			insert, err := buildInsertStmt(columns, *table.Relation.Relname)
+
+			// TODO this regexp is just a temp test
+			re, _ := regexp.Compile("\\$[0-9]")
+			newInsert := re.ReplaceAllString(*insert, "%v")
+			fmt.Printf(newInsert+"\n", w...)
+
 			if err != nil {
 				log.Printf("failed to build insert statement for table \"%s\": %v", *table.Relation.Relname, err)
 				continue
 			}
-			// fmt.Println(*insert, w)
-			_, err = conn.Query(context.Background(), *insert, w...)
-			if err != nil {
-				// TODO keep trying to build table in this case?
-				log.Println(err)
+			prevErr := <-done
+			if prevErr != nil {
+				i-- // if the last query made an error, try again
 			}
+			go db.MakeInsert(done, *insert, w...)
 		}
 	}
 	return nil
@@ -165,8 +174,8 @@ func findForeignConstraint(columnConstraints []nodes.Node) int {
 	return idx
 }
 
-func getRandomForeignRefValue(conn *pgx.Conn, foreigntable, foreigncolumn string) interface{} {
-	row := conn.QueryRow(context.Background(), fmt.Sprintf("SELECT %s FROM %s ORDER BY RANDOM() LIMIT 1", foreigncolumn, foreigntable))
+func getRandomForeignRefValue(foreigntable, foreigncolumn string) interface{} {
+	row := db.MakeQueryRow(fmt.Sprintf("SELECT %s FROM %s ORDER BY RANDOM() LIMIT 1", foreigncolumn, foreigntable))
 	var val interface{}
 	err := row.Scan(&val)
 	if err != nil {
@@ -190,7 +199,7 @@ func buildInsertStmt(columns []string, table string) (*string, error) {
 		if i == len(columns)-1 {
 			insert += col + ") "
 		} else {
-			insert += col + " "
+			insert += col + ", "
 		}
 	}
 	insert += "VALUES ("

@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"context"
 	"flag"
 	"log"
 	"os"
@@ -25,18 +24,17 @@ func Execute() {
 	amount := flag.Int("amount", 10, "how many rows to insert for each table")
 	flag.Parse()
 
-	conn, err := db.GetConnection(*connString)
+	err := db.GetConnection(*connString)
 	if err != nil {
 		log.Fatalf("unable to connect to database: %v", err)
 	}
-	defer conn.Close(context.Background())
+	defer db.Close()
 
 	mockConfig := &mocker.Config{
 		IgnoreTables: strings.Split(*ignoreTables, ","),
 		Amount:       *amount,
 	}
-
-	if err := m.Mock(conn, mockConfig); err != nil {
+	if err := m.Mock(mockConfig); err != nil {
 		log.Fatalf("unable to mock the database: %v", err)
 	}
 }
