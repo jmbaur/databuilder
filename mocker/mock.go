@@ -97,10 +97,15 @@ func (m *Mocker) Mock(config *Config) error {
 
 				var columnValue interface{}
 				switch columnType {
+				case "serial":
+				case "uuid":
+					// these are created by postgres on insert
+					continue
 				case "int4": // "signed 4-byte integer "https://www.postgresql.org/docs/8.1/datatype.html
 					columnValue = gofakeit.Uint32()
 				case "bool":
 					columnValue = gofakeit.Bool()
+				case "varchar":
 				case "text":
 					columnValue = generateText(columnName, column.IsNotNull)
 				case "date":
@@ -113,15 +118,13 @@ func (m *Mocker) Mock(config *Config) error {
 					columnValue = "[" + date1.Format(time.RFC3339) + "," + date2.Format(time.RFC3339) + "]"
 				case "pg_catalog":
 					columnValue = getRandomForeignRefValue(*foreigntable, *foreigncolumn)
-				case "serial":
-					// these are created by postgres on insert
-					continue
 				case "json":
 					json, _ := json.Marshal(struct {
 						Status string `json:"status"`
 					}{Status: "JSON is not yet implemented."})
 					columnValue = json
 				case "bytea":
+				case "jsonb":
 					continue
 				default:
 					// is most likely an enum type
