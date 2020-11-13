@@ -19,13 +19,14 @@ func GetConnection(connString string) error {
 	return nil
 }
 
-func MakeInsert(done chan<- error, query string, queryparams ...interface{}) {
-	rows, err := db.Query(context.Background(), query, queryparams...)
+func MakeInsert(writer DbWriter, done chan<- error, query string, params ...interface{}) {
+	// TODO: build query with params
+	err := writer.Write(query)
 	if err != nil {
 		logg.Printf(logg.Info, "%v\n", err)
 		done <- err
+		return
 	}
-	defer rows.Close()
 	done <- nil
 }
 

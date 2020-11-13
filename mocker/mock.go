@@ -153,7 +153,8 @@ func (m *Mocker) Mock(config *Config) error {
 				errors++
 				continue // try to make again
 			}
-			go db.MakeInsert(done, *insert, w...)
+			// TODO: make writer outside of loop
+			go db.MakeInsert(writer, done, *insert, w...)
 			i++
 		}
 	}
