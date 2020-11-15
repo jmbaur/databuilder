@@ -2,6 +2,7 @@ package logg
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/fatih/color"
 )
@@ -33,7 +34,7 @@ func Printf(level int, format string, v ...interface{}) {
 		col = color.FgWhite
 	}
 	color.Set(col)
-	fmt.Printf(prefix + " ")
+	fmt.Fprintf(os.Stderr, prefix+" ")
 	color.Unset()
-	fmt.Printf(format, v...)
+	fmt.Fprintf(os.Stderr, format, v...)
 }
