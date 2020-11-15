@@ -6,20 +6,6 @@ import (
 	nodes "github.com/lfittl/pg_query_go/nodes"
 )
 
-// Mocker is used for parsing SQL statements as well as mocking data
-type Mocker struct {
-	DBConStr string
-	Tables   []nodes.CreateStmt
-	Enums    []nodes.CreateEnumStmt
-}
-
-// New initializes a Mocker object for use with parsing SQL statements
-func New(conStr string) *Mocker {
-	return &Mocker{
-		DBConStr: conStr,
-	}
-}
-
 func (m *Mocker) createTable(table nodes.CreateStmt, ifNotExists bool) error {
 	idx := m.findTable(*table.Relation.Relname)
 	if idx >= 0 && ifNotExists {

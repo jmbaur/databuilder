@@ -1,55 +1,29 @@
 package mocker
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"math/rand"
-	"regexp"
 	"strconv"
 	"time"
 
 	"github.com/brianvoe/gofakeit/v5"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/jmbaur/databuilder/db"
 	"github.com/jmbaur/databuilder/logg"
 	nodes "github.com/lfittl/pg_query_go/nodes"
 )
 
-type Config struct {
-	IgnoreTables []string // tables to ignore
-	ignoreTables []*regexp.Regexp
-	Amount       int // amount of widgets to make for each table
-}
-
-func (c *Config) prep() error {
-	for _, tableMatch := range c.IgnoreTables {
-		re, err := regexp.Compile(tableMatch)
-		if err != nil {
-			return err
-		}
-		c.ignoreTables = append(c.ignoreTables, re)
-	}
-	return nil
-}
-
-func (c *Config) tableSkip(tableName string) bool {
-	var skip bool
-	for _, re := range c.ignoreTables {
-		if re.MatchString(tableName) {
-			skip = true
-		}
-	}
-	return skip
-}
-
-func (m *Mocker) Mock(config *Config) error {
-	if err := config.prep(); err != nil {
+func (m *Mocker) Mock() error {
+	if err := m.prep(); err != nil {
 		return err
 	}
 
 	gofakeit.Seed(time.Now().UnixNano())
 
 	for _, table := range m.Tables {
-		if config.tableSkip(*table.Relation.Relname) {
+		if m.tableSkip(*table.Relation.Relname) {
 			continue
 		}
 
@@ -60,8 +34,8 @@ func (m *Mocker) Mock(config *Config) error {
 
 		var i, errors int
 		var columns []string
-		for i < config.Amount {
-			if errors > config.Amount {
+		for i < m.Config.Amount {
+			if errors > m.Config.Amount {
 				break // stop trying to make these
 			}
 
@@ -117,7 +91,7 @@ func (m *Mocker) Mock(config *Config) error {
 					date2 := date1.Add(time.Duration(gofakeit.Number(1, 10000)) * time.Hour)
 					columnValue = "[" + date1.Format(time.RFC3339) + "," + date2.Format(time.RFC3339) + "]"
 				case "pg_catalog":
-					columnValue = getRandomForeignRefValue(*foreigntable, *foreigncolumn)
+					columnValue = getRandomForeignRefValue(m.Config.Db, *foreigntable, *foreigncolumn)
 				case "json":
 					json, _ := json.Marshal(struct {
 						Status string `json:"status"`
@@ -153,8 +127,7 @@ func (m *Mocker) Mock(config *Config) error {
 				errors++
 				continue // try to make again
 			}
-			// TODO: make writer outside of loop
-			go db.MakeInsert(writer, done, *insert, w...)
+			go db.MakeInsert(m.Config.Writer, done, *insert, w...)
 			i++
 		}
 	}
@@ -191,8 +164,8 @@ func findForeignConstraint(columnConstraints []nodes.Node) int {
 	return idx
 }
 
-func getRandomForeignRefValue(foreigntable, foreigncolumn string) interface{} {
-	row := db.MakeQueryRow(fmt.Sprintf("SELECT %s FROM %s ORDER BY RANDOM() LIMIT 1", foreigncolumn, foreigntable))
+func getRandomForeignRefValue(db *pgxpool.Pool, foreigntable, foreigncolumn string) interface{} {
+	row := db.QueryRow(context.Background(), fmt.Sprintf("SELECT %s FROM %s ORDER BY RANDOM() LIMIT 1", foreigncolumn, foreigntable))
 	var val interface{}
 	err := row.Scan(&val)
 	if err != nil {
