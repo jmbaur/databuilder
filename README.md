@@ -1,8 +1,10 @@
 # DataBuilder
 
+Uses init SQL scripts to setup a database with mock data.
+
 ## Installation
 
-`go get -u github.com/jmbaur/databuilder`
+`go get github.com/jmbaur/databuilder`
 
 ## Usage
 
