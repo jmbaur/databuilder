@@ -2,7 +2,6 @@ package mocker
 
 import (
 	"context"
-	"io"
 	"os"
 	"regexp"
 
@@ -16,7 +15,6 @@ type Config struct {
 	ignoreTables []*regexp.Regexp
 	OutFile      os.File
 	Amount       int // amount of widgets to make for each table
-	Writer       io.Writer
 }
 
 type Mocker struct {

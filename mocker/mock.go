@@ -4,18 +4,17 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"math/rand"
-	"strconv"
 	"time"
 
 	"github.com/brianvoe/gofakeit/v5"
 	"github.com/jackc/pgx/v4/pgxpool"
-	"github.com/jmbaur/databuilder/db"
 	"github.com/jmbaur/databuilder/logg"
 	nodes "github.com/lfittl/pg_query_go/nodes"
 )
 
-func (m *Mocker) Mock() error {
+func (m *Mocker) Mock(writer io.Writer) error {
 	if err := m.prep(); err != nil {
 		return err
 	}
@@ -115,7 +114,7 @@ func (m *Mocker) Mock() error {
 				w = append(w, columnValue)
 			}
 			// insert into  table
-			insert, err := buildInsertStmt(columns, *table.Relation.Relname)
+			insert, err := buildInsertStmt(columns, *table.Relation.Relname, w)
 			if err != nil {
 				logg.Printf(logg.Warn, "Failed to build insert statement for table \"%s\": %v\n", *table.Relation.Relname, err)
 				i++
@@ -127,7 +126,14 @@ func (m *Mocker) Mock() error {
 				errors++
 				continue // try to make again
 			}
-			go db.MakeInsert(m.Config.Writer, done, *insert, w...)
+			go func() {
+				_, err := writer.Write(*insert, w...)
+				if err != nil {
+					done <- err
+					return
+				}
+				done <- nil
+			}()
 			i++
 		}
 	}
@@ -178,9 +184,12 @@ func passesConstraints(widget interface{}, constraints []nodes.Constraint) bool 
 	return true
 }
 
-func buildInsertStmt(columns []string, table string) (*string, error) {
+func buildInsertStmt(columns []string, table string, w []interface{}) (*string, error) {
 	if len(columns) == 0 {
 		return nil, fmt.Errorf("table has no columns")
+	}
+	if len(columns) != len(w) {
+		return nil, fmt.Errorf("number of columns and number of values do not match")
 	}
 	var insert string
 	insert += "INSERT INTO "
@@ -195,9 +204,11 @@ func buildInsertStmt(columns []string, table string) (*string, error) {
 	insert += "VALUES ("
 	for i := range columns {
 		if i == len(columns)-1 {
-			insert += "$" + strconv.Itoa(i+1) + ")"
+			insert += fmt.Sprintf("%s", w[i]) + ")"
+			// insert += "$" + strconv.Itoa(i+1) + ")"
 		} else {
-			insert += "$" + strconv.Itoa(i+1) + ", "
+			insert += fmt.Sprintf("%s", w[i]) + ", "
+			// insert += "$" + strconv.Itoa(i+1) + ", "
 		}
 	}
 	return &insert, nil
