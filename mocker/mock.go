@@ -71,14 +71,18 @@ func (m *Mocker) Mock(writer io.Writer) error {
 				var columnValue interface{}
 				switch columnType {
 				case "serial":
+					fallthrough
 				case "uuid":
 					// these are created by postgres on insert
 					continue
 				case "int4": // "signed 4-byte integer "https://www.postgresql.org/docs/8.1/datatype.html
 					columnValue = gofakeit.Uint32()
 				case "bool":
-					columnValue = gofakeit.Bool()
+					fallthrough
+				case "boolean":
+					columnValue = strconv.FormatBool(gofakeit.Bool())
 				case "varchar":
+					fallthrough
 				case "text":
 					columnValue = generateText(columnName, column.IsNotNull)
 				case "date":
@@ -97,6 +101,7 @@ func (m *Mocker) Mock(writer io.Writer) error {
 					}{Status: "JSON is not yet implemented."})
 					columnValue = json
 				case "bytea":
+					fallthrough
 				case "jsonb":
 					continue
 				default:
