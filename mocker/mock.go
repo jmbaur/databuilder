@@ -87,15 +87,15 @@ func (m *Mocker) Mock(writer io.Writer) error {
 				case "varchar":
 					fallthrough
 				case "text":
-					columnValue = fmt.Sprintf("\"%s\"", generateText(columnName, column.IsNotNull))
+					columnValue = fmt.Sprintf("'%s'", generateText(columnName, column.IsNotNull))
 				case "date":
-					columnValue = fmt.Sprintf("\"%s\"", gofakeit.Date().Format(time.RFC3339))
+					columnValue = fmt.Sprintf("'%s'", gofakeit.Date().Format(time.RFC3339))
 				case "timestamp":
-					columnValue = fmt.Sprintf("\"%s\"", gofakeit.Date())
+					columnValue = fmt.Sprintf("'%s'", gofakeit.Date())
 				case "daterange":
 					date1 := gofakeit.Date()
 					date2 := date1.Add(time.Duration(gofakeit.Number(1, 10000)) * time.Hour)
-					columnValue = fmt.Sprintf("\"[%s,%s]\"", date1.Format(time.RFC3339), date2.Format(time.RFC3339))
+					columnValue = fmt.Sprintf("'[%s,%s]'", date1.Format(time.RFC3339), date2.Format(time.RFC3339))
 				case "pg_catalog":
 					columnValue = getRandomForeignRefValue(m.Config.Db, *foreigntable, *foreigncolumn)
 				case "json":
@@ -114,7 +114,7 @@ func (m *Mocker) Mock(writer io.Writer) error {
 						logg.Printf(logg.Warn, "Could not find enum %s\n", columnType)
 						continue
 					}
-					columnValue = fmt.Sprintf("\"%s\"", getRandomEnumValue(m.Enums, enumIndex))
+					columnValue = fmt.Sprintf("'%s'", getRandomEnumValue(m.Enums, enumIndex))
 				}
 
 				r[columnName] = columnValue
@@ -128,15 +128,19 @@ func (m *Mocker) Mock(writer io.Writer) error {
 
 			go func() {
 				// get insert stmt
-				_, err := buildInsertStmt([]record{r}, *table.Relation.Relname)
+				insertOne, err := buildInsertStmt([]record{r}, *table.Relation.Relname)
 				if err != nil {
-					logg.Printf(logg.Warn, "Failed to build insert statement for table \"%s\": %v\n", *table.Relation.Relname, err)
+					logg.Printf(logg.Warn, "Failed to build insert statement for table '%s': %v\n", *table.Relation.Relname, err)
 					done <- err
 					return
 				}
-				// fmt.Println(*insertOne)
 				// make database call
-				////////////////////////////////////////////////////////////////////////
+				_, err = m.Config.Db.Query(context.Background(), *insertOne)
+				if err != nil {
+					done <- err
+					logg.Printf(logg.Warn, "Failed to insert record into %s table: %v\n", *table.Relation.Relname, err)
+					return
+				}
 				// append to records if no error from DB call
 				records = append(records, r)
 				done <- nil
@@ -145,7 +149,7 @@ func (m *Mocker) Mock(writer io.Writer) error {
 
 		insertMany, err := buildInsertStmt(records, *table.Relation.Relname)
 		if err != nil {
-			logg.Printf(logg.Warn, "failed to build insert statement for table \"%s\": %v\n", *table.Relation.Relname, err)
+			logg.Printf(logg.Warn, "failed to build insert statement for table '%s': %v\n", *table.Relation.Relname, err)
 			os.Exit(5)
 		}
 		writer.Write([]byte(*insertMany))
