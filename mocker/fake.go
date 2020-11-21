@@ -76,5 +76,5 @@ func generateText(column string, isNotNull bool) string {
 		return gofakeit.LoremIpsumWord()
 	}
 
-	return ""
+	return "not implemented"
 }

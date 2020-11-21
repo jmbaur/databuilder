@@ -50,24 +50,6 @@ func Execute() {
 	m := &mocker.Mocker{}
 	m.Parse(reader) // builds the Mocker object with tables and enums
 
-	var writer io.Writer
-	if outFile == nil {
-		writer = os.Stdout
-	} else {
-		full, err := filepath.Abs(*outFile)
-		if err != nil {
-			logg.Printf(logg.Fatal, "Could not get full path to file: %v\n", *outFile)
-			os.Exit(2)
-		}
-		os.Remove(full)
-		writer, err := os.Create(full)
-		if err != nil {
-			logg.Printf(logg.Fatal, "Unable to create file: %v\n", *outFile)
-			os.Exit(2)
-		}
-		defer writer.Close()
-	}
-
 	conn, err := pgxpool.Connect(context.Background(), *connection)
 	if err != nil {
 		logg.Printf(logg.Fatal, "Unable to connect to database: %v\n", err)
@@ -80,8 +62,29 @@ func Execute() {
 		IgnoreTables: strings.Split(*ignoreTables, ","),
 		Amount:       *amount,
 	}
-	if err := m.Mock(writer); err != nil {
-		logg.Printf(logg.Fatal, "Unable to mock the database: %v\n", err)
-		os.Exit(3)
+
+	if outFile != nil {
+		full, err := filepath.Abs(*outFile)
+		if err != nil {
+			logg.Printf(logg.Fatal, "Could not get full path to file: %v\n", *outFile)
+			os.Exit(2)
+		}
+		os.Remove(full)
+		file, err := os.Create(full)
+		if err != nil {
+			logg.Printf(logg.Fatal, "Unable to create file: %v\n", *outFile)
+			os.Exit(2)
+		}
+		defer file.Close()
+		if err := m.Mock(file); err != nil {
+			logg.Printf(logg.Fatal, "Unable to mock the database: %v\n", err)
+			os.Exit(3)
+		}
+	} else {
+		if err := m.Mock(os.Stdout); err != nil {
+			logg.Printf(logg.Fatal, "Unable to mock the database: %v\n", err)
+			os.Exit(3)
+		}
 	}
+
 }

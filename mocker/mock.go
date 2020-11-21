@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io"
 	"math/rand"
+	"os"
+	"strconv"
 	"time"
 
 	"github.com/brianvoe/gofakeit/v5"
@@ -13,6 +15,8 @@ import (
 	"github.com/jmbaur/databuilder/logg"
 	nodes "github.com/lfittl/pg_query_go/nodes"
 )
+
+type record map[string]interface{}
 
 func (m *Mocker) Mock(writer io.Writer) error {
 	if err := m.prep(); err != nil {
@@ -32,13 +36,13 @@ func (m *Mocker) Mock(writer io.Writer) error {
 		}()
 
 		var i, errors int
-		var columns []string
+		var records []record
 		for i < m.Config.Amount {
 			if errors > m.Config.Amount {
 				break // stop trying to make these
 			}
 
-			var w []interface{}
+			r := make(record)
 			for _, tableElement := range table.TableElts.Items {
 
 				column, okColumn := tableElement.(nodes.ColumnDef)
@@ -73,10 +77,9 @@ func (m *Mocker) Mock(writer io.Writer) error {
 				case "serial":
 					fallthrough
 				case "uuid":
-					// these are created by postgres on insert
 					continue
 				case "int4": // "signed 4-byte integer "https://www.postgresql.org/docs/8.1/datatype.html
-					columnValue = gofakeit.Uint32()
+					columnValue = strconv.FormatUint(gofakeit.Uint64(), 10)
 				case "bool":
 					fallthrough
 				case "boolean":
@@ -84,15 +87,15 @@ func (m *Mocker) Mock(writer io.Writer) error {
 				case "varchar":
 					fallthrough
 				case "text":
-					columnValue = generateText(columnName, column.IsNotNull)
+					columnValue = fmt.Sprintf("\"%s\"", generateText(columnName, column.IsNotNull))
 				case "date":
-					columnValue = gofakeit.Date().Format(time.RFC3339)
+					columnValue = fmt.Sprintf("\"%s\"", gofakeit.Date().Format(time.RFC3339))
 				case "timestamp":
-					columnValue = gofakeit.Date()
+					columnValue = fmt.Sprintf("\"%s\"", gofakeit.Date())
 				case "daterange":
 					date1 := gofakeit.Date()
 					date2 := date1.Add(time.Duration(gofakeit.Number(1, 10000)) * time.Hour)
-					columnValue = "[" + date1.Format(time.RFC3339) + "," + date2.Format(time.RFC3339) + "]"
+					columnValue = fmt.Sprintf("\"[%s,%s]\"", date1.Format(time.RFC3339), date2.Format(time.RFC3339))
 				case "pg_catalog":
 					columnValue = getRandomForeignRefValue(m.Config.Db, *foreigntable, *foreigncolumn)
 				case "json":
@@ -111,36 +114,41 @@ func (m *Mocker) Mock(writer io.Writer) error {
 						logg.Printf(logg.Warn, "Could not find enum %s\n", columnType)
 						continue
 					}
-					columnValue = getRandomEnumValue(m.Enums, enumIndex)
+					columnValue = fmt.Sprintf("\"%s\"", getRandomEnumValue(m.Enums, enumIndex))
 				}
-				if i == 0 {
-					columns = append(columns, columnName)
-				}
-				w = append(w, columnValue)
-			}
-			// insert into  table
-			insert, err := buildInsertStmt(columns, *table.Relation.Relname, w)
-			if err != nil {
-				logg.Printf(logg.Warn, "Failed to build insert statement for table \"%s\": %v\n", *table.Relation.Relname, err)
-				i++
-				continue
+
+				r[columnName] = columnValue
 			}
 
-			prevErr := <-done
-			if prevErr != nil {
+			if prevErr := <-done; prevErr != nil {
 				errors++
-				continue // try to make again
+			} else {
+				i++
 			}
+
 			go func() {
-				_, err := writer.Write(*insert, w...)
+				// get insert stmt
+				_, err := buildInsertStmt([]record{r}, *table.Relation.Relname)
 				if err != nil {
+					logg.Printf(logg.Warn, "Failed to build insert statement for table \"%s\": %v\n", *table.Relation.Relname, err)
 					done <- err
 					return
 				}
+				// fmt.Println(*insertOne)
+				// make database call
+				////////////////////////////////////////////////////////////////////////
+				// append to records if no error from DB call
+				records = append(records, r)
 				done <- nil
 			}()
-			i++
 		}
+
+		insertMany, err := buildInsertStmt(records, *table.Relation.Relname)
+		if err != nil {
+			logg.Printf(logg.Warn, "failed to build insert statement for table \"%s\": %v\n", *table.Relation.Relname, err)
+			os.Exit(5)
+		}
+		writer.Write([]byte(*insertMany))
 	}
 	return nil
 }
@@ -189,32 +197,30 @@ func passesConstraints(widget interface{}, constraints []nodes.Constraint) bool 
 	return true
 }
 
-func buildInsertStmt(columns []string, table string, w []interface{}) (*string, error) {
-	if len(columns) == 0 {
-		return nil, fmt.Errorf("table has no columns")
+func buildInsertStmt(records []record, table string) (*string, error) {
+	if len(records) == 0 {
+		return nil, fmt.Errorf("no records to insert")
 	}
-	if len(columns) != len(w) {
-		return nil, fmt.Errorf("number of columns and number of values do not match")
+
+	var stmt string
+	stmt += "INSERT INTO " + table + " ("
+
+	firstRec := records[0]
+	cols := []string{}
+	for col := range firstRec {
+		cols = append(cols, col)
+		stmt += col + ", "
 	}
-	var insert string
-	insert += "INSERT INTO "
-	insert += table + " ("
-	for i, col := range columns {
-		if i == len(columns)-1 {
-			insert += col + ") "
-		} else {
-			insert += col + ", "
+	stmt = stmt[:len(stmt)-2] + ") VALUES "
+
+	for _, r := range records {
+		stmt += "("
+		for i := 0; i < len(r); i++ {
+			stmt += fmt.Sprintf("%s", r[cols[i]]) + ","
 		}
+		stmt = stmt[:len(stmt)-1] + "), "
 	}
-	insert += "VALUES ("
-	for i := range columns {
-		if i == len(columns)-1 {
-			insert += fmt.Sprintf("%s", w[i]) + ")"
-			// insert += "$" + strconv.Itoa(i+1) + ")"
-		} else {
-			insert += fmt.Sprintf("%s", w[i]) + ", "
-			// insert += "$" + strconv.Itoa(i+1) + ", "
-		}
-	}
-	return &insert, nil
+	stmt = stmt[:len(stmt)-2] + ";"
+
+	return &stmt, nil
 }
