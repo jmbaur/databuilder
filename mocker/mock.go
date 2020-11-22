@@ -78,7 +78,7 @@ func (m *Mocker) Mock(writer io.Writer) error {
 				case "uuid":
 					continue
 				case "int4": // "signed 4-byte integer "https://www.postgresql.org/docs/8.1/datatype.html
-					columnValue = strconv.FormatUint(gofakeit.Uint64(), 10)
+					columnValue = fmt.Sprintf("%d", gofakeit.Uint32())
 				case "bool":
 					fallthrough
 				case "boolean":
@@ -101,7 +101,7 @@ func (m *Mocker) Mock(writer io.Writer) error {
 					json, _ := json.Marshal(struct {
 						Status string `json:"status"`
 					}{Status: "JSON is not yet implemented."})
-					columnValue = json
+					columnValue = fmt.Sprintf("'%s'", json)
 				case "bytea":
 					fallthrough
 				case "jsonb":
