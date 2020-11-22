@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"math/rand"
-	"os"
 	"strconv"
 	"time"
 
@@ -91,7 +90,7 @@ func (m *Mocker) Mock(writer io.Writer) error {
 				case "date":
 					columnValue = fmt.Sprintf("'%s'", gofakeit.Date().Format(time.RFC3339))
 				case "timestamp":
-					columnValue = fmt.Sprintf("'%s'", gofakeit.Date())
+					columnValue = fmt.Sprintf("'%s'", gofakeit.Date().Format(time.RFC3339))
 				case "daterange":
 					date1 := gofakeit.Date()
 					date2 := date1.Add(time.Duration(gofakeit.Number(1, 10000)) * time.Hour)
@@ -150,7 +149,7 @@ func (m *Mocker) Mock(writer io.Writer) error {
 		insertMany, err := buildInsertStmt(records, *table.Relation.Relname)
 		if err != nil {
 			logg.Printf(logg.Warn, "failed to build insert statement for table '%s': %v\n", *table.Relation.Relname, err)
-			os.Exit(5)
+			continue
 		}
 		writer.Write([]byte(*insertMany))
 	}
