@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"math/rand"
+	"os"
 	"strconv"
 	"time"
 
@@ -29,18 +30,18 @@ func (m *Mocker) Mock(writer io.Writer) error {
 			continue
 		}
 
-		done := make(chan error)
+		worker := make(chan []record)
+		done := make(chan bool)
+
+		go work(worker, done, *table.Relation.Relname, m.Config.Amount, m.Config.Db, writer)
 		go func() {
-			done <- nil // we do not want to block the first insert into the table
+			if isDone := <-done; isDone {
+				// TODO: go to next table
+				os.Exit(10)
+			}
 		}()
 
-		var i, errors int
-		var records []record
-		for i < m.Config.Amount {
-			if errors > m.Config.Amount {
-				break // stop trying to make these
-			}
-
+		for {
 			r := make(record)
 			for _, tableElement := range table.TableElts.Items {
 
@@ -115,43 +116,11 @@ func (m *Mocker) Mock(writer io.Writer) error {
 					}
 					columnValue = fmt.Sprintf("'%s'", getRandomEnumValue(m.Enums, enumIndex))
 				}
-
 				r[columnName] = columnValue
 			}
 
-			if prevErr := <-done; prevErr != nil {
-				errors++
-			} else {
-				i++
-			}
-
-			go func() {
-				// get insert stmt
-				insertOne, err := buildInsertStmt([]record{r}, *table.Relation.Relname)
-				if err != nil {
-					logg.Printf(logg.Warn, "Failed to build insert statement for table '%s': %v\n", *table.Relation.Relname, err)
-					done <- err
-					return
-				}
-				// make database call
-				_, err = m.Config.Db.Query(context.Background(), *insertOne)
-				if err != nil {
-					done <- err
-					logg.Printf(logg.Warn, "Failed to insert record into %s table: %v\n", *table.Relation.Relname, err)
-					return
-				}
-				// append to records if no error from DB call
-				records = append(records, r)
-				done <- nil
-			}()
+			worker <- []record{r}
 		}
-
-		insertMany, err := buildInsertStmt(records, *table.Relation.Relname)
-		if err != nil {
-			logg.Printf(logg.Warn, "failed to build insert statement for table '%s': %v\n", *table.Relation.Relname, err)
-			continue
-		}
-		writer.Write([]byte(*insertMany))
 	}
 	return nil
 }
@@ -198,32 +167,4 @@ func getRandomForeignRefValue(db *pgxpool.Pool, foreigntable, foreigncolumn stri
 
 func passesConstraints(widget interface{}, constraints []nodes.Constraint) bool {
 	return true
-}
-
-func buildInsertStmt(records []record, table string) (*string, error) {
-	if len(records) == 0 {
-		return nil, fmt.Errorf("no records to insert")
-	}
-
-	var stmt string
-	stmt += "INSERT INTO " + table + " ("
-
-	firstRec := records[0]
-	cols := []string{}
-	for col := range firstRec {
-		cols = append(cols, col)
-		stmt += col + ", "
-	}
-	stmt = stmt[:len(stmt)-2] + ") VALUES "
-
-	for _, r := range records {
-		stmt += "("
-		for i := 0; i < len(r); i++ {
-			stmt += fmt.Sprintf("%s", r[cols[i]]) + ","
-		}
-		stmt = stmt[:len(stmt)-1] + "), "
-	}
-	stmt = stmt[:len(stmt)-2] + ";"
-
-	return &stmt, nil
 }
