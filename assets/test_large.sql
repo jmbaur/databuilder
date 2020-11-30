@@ -1,9 +1,4 @@
-DROP TABLE pw_enrollments;
-DROP TABLE temp_guides;
-DROP TABLE users;
-
-DROP EXTENSION btree_gist;
-DROP EXTENSION pgcrypto;CREATE EXTENSION btree_gist;
+CREATE EXTENSION btree_gist;
 CREATE EXTENSION pgcrypto;
 
 CREATE TABLE users (
@@ -27,7 +22,7 @@ CREATE TABLE temp_guides (
   UNIQUE (pw_user_id)
 );
 
-CREATE TABLE IF NOT EXISTS pw_enrollments (
+CREATE TABLE pw_enrollments (
   id SERIAL PRIMARY KEY,
   pw_student_id INTEGER NOT NULL,
   pw_microschool_id INTEGER NOT NULL,
@@ -35,10 +30,7 @@ CREATE TABLE IF NOT EXISTS pw_enrollments (
   cents_per_minute INTEGER,
   during DATERANGE NOT NULL,
   EXCLUDE USING GIST (pw_student_id WITH =, during WITH &&)
-);DROP TABLE temp_microschool_location;
-
-ALTER TABLE users
-DROP COLUMN expiration;CREATE TABLE temp_microschool_location (
+);CREATE TABLE temp_microschool_location (
 id SERIAL PRIMARY KEY,
 microschool_zoho_id TEXT NOT NULL,
 latitude TEXT,
@@ -241,15 +233,14 @@ INSERT INTO "public"."temp_microschool_location" ("microschool_zoho_id", "latitu
 
 ALTER TABLE users
 ADD COLUMN expiration timestamp;
-DROP TABLE globals;
+
 CREATE TABLE globals (
   key TEXT PRIMARY KEY,
   document JSONB
 );
 
 INSERT INTO globals (key, document)
-VALUES ('downloadAttendanceData', '{"isRunning": false, "timeRan": null}');DROP TABLE applications;
-DROP TYPE application_status;CREATE TYPE application_status AS ENUM ('not started', 'saved for later', 'submitted', 'approved', 'missing information', 'not approved');
+VALUES ('downloadAttendanceData', '{"isRunning": false, "timeRan": null}');CREATE TYPE application_status AS ENUM ('not started', 'saved for later', 'submitted', 'approved', 'missing information', 'not approved');
 
 CREATE TABLE applications (
   -- I didn't use PRIMARY KEY (student_id, school_year) because there is a chance that student_id could have null values with new enrollments in the future
@@ -264,8 +255,7 @@ CREATE TABLE applications (
   document JSONB,
   UNIQUE (zoho_student_id, zoho_microschool_id),
   UNIQUE (zoho_student_id, school_year)
-);ALTER TABLE applications DROP COLUMN files;ALTER TABLE applications ADD COLUMN files JSONB;DROP TABLE "session";
-CREATE TABLE "session" (
+);ALTER TABLE applications ADD COLUMN files JSONB;CREATE TABLE "session" (
   "sid" varchar NOT NULL COLLATE "default" PRIMARY KEY NOT DEFERRABLE INITIALLY IMMEDIATE,
 	"sess" json NOT NULL,
 	"expire" timestamp(6) NOT NULL
@@ -276,49 +266,6 @@ WITH (OIDS=FALSE);
 -- ALTER TABLE "session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
 
 CREATE INDEX"IDX_session_expire" ON "session" ("expire");
---DROP upsert FUCNTIONS
-DROP FUNCTION upsert_microschool_terms(INTEGER, grade_level, grade_level, INTEGER, microschool_type, DATERANGE, BOOLEAN, BOOLEAN, BOOLEAN);
-DROP FUNCTION upsert_microschool_enrollments(INTEGER, INTEGER, INTEGER, INTEGER, DATERANGE);
-DROP FUNCTION upsert_grade_enrollments(INTEGER, INTEGER, DATERANGE);
-DROP FUNCTION upsert_students(funding_source, TEXT, TEXT, TEXT, TEXT, DATE, TEXT, TEXT, TEXT, TEXT, TEXT, INTEGER, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, INTEGER, TEXT, TEXT, TEXT, TEXT, grade_level, TEXT, BOOLEAN, BOOLEAN, TEXT, BOOLEAN, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, BOOLEAN, BYTEA, BYTEA, BYTEA, TEXT, TEXT, TEXT, TEXT, BOOLEAN, DATE, BYTEA, TEXT, BOOLEAN, TEXT, BOOLEAN, TEXT, TEXT, BOOLEAN, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, DATE, DATE, TEXT, BOOLEAN, TEXT, TEXT, TEXT, TEXT, DATERANGE, grade_level, school_year);
-
--- DROP VIEW students_view;
-DROP TABLE zoho_exceptions;
-DROP TABLE pw_exceptions;
-DROP TABLE pw_enrollments_dump;
-DROP TABLE pw_guides_dump;
-DROP TABLE pw_students_dump;
-DROP TABLE pw_microschools_dump;
-DROP TABLE attendance;
-DROP TYPE attendance_types;
-DROP TABLE funding_source_enrollments;
-DROP TABLE funding_source_registrations;
-DROP TABLE microschool_enrollments;
-DROP TABLE guide_mentors;
-DROP TABLE staffing;
-DROP TABLE microschool_terms;
-DROP TABLE microschools;
-DROP TYPE microschool_type;
-DROP TABLE grade_enrollments;
-DROP FUNCTION valid_grade_enrollment(DATERANGE, INTEGER);
-DROP TABLE grade_years;
-DROP TYPE school_year;
-DROP TABLE relationships;
-DROP TABLE students;
-DROP TYPE grade_level;
-DROP TYPE funding_source;
-DROP TABLE adults;
-DROP TABLE states;
-
-DROP EXTENSION "uuid-ossp";
-
-DROP TABLE data_exceptions;
-DROP TABLE pw_enrollments_dump;
-DROP TABLE pw_students_dump;
-DROP TABLE pw_guides_dump;
-DROP TABLE pw_microschools_dump;
-DROP TABLE pw_exceptions;
-DROP TABLE zoho_exceptions;
 --DROP upsert FUCNTIONS
 DROP FUNCTION IF EXISTS upsert_microschool_terms(INTEGER, grade_level, grade_level, INTEGER, microschool_type, DATERANGE, BOOLEAN, BOOLEAN, BOOLEAN);
 DROP FUNCTION IF EXISTS upsert_microschool_enrollments(INTEGER, INTEGER, INTEGER, INTEGER, DATERANGE);
@@ -344,6 +291,7 @@ DROP TABLE IF EXISTS microschools;
 DROP TYPE IF EXISTS microschool_type;
 DROP TABLE IF EXISTS grade_enrollments;
 DROP FUNCTION IF EXISTS valid_grade_enrollment(DATERANGE, INTEGER);
+DROP FUNCTION IF EXISTS valid_grade_enrollment(DATERANGE, UUID);
 DROP TABLE IF EXISTS grade_years;
 DROP TYPE IF EXISTS school_year;
 DROP TABLE IF EXISTS relationships;
@@ -366,7 +314,7 @@ DROP EXTENSION IF EXISTS "uuid-ossp";
 CREATE EXTENSION "uuid-ossp";
 
 CREATE TABLE states (
-  id SERIAL PRIMARY KEY,
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   state_name TEXT,
   state_abbrev CHAR (2)
 );
@@ -468,14 +416,14 @@ CREATE TABLE students (
   address_1 TEXT,
   address_2 TEXT,
   city TEXT,
-  state INTEGER REFERENCES states (id),
+  state UUID REFERENCES states (id),
   zip5 TEXT,
   zip4 TEXT,
   sais_id TEXT UNIQUE,
   airtable_id TEXT UNIQUE,
   zoho_id TEXT UNIQUE,
   pw_id TEXT UNIQUE,
-  birth_state INTEGER REFERENCES states (id),
+  birth_state UUID REFERENCES states (id),
   birth_country TEXT,
   last_school TEXT,
   last_school_address TEXT,
@@ -556,7 +504,7 @@ CREATE TABLE students (
 );
 
 CREATE TABLE relationships (
-  id SERIAL PRIMARY KEY,
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   guardian_id UUID NOT NULL REFERENCES adults (id),
   student_id UUID NOT NULL REFERENCES students (id),
   notes TEXT NOT NULL
@@ -565,10 +513,10 @@ CREATE TABLE relationships (
 CREATE TYPE school_year AS ENUM ('18-19', '19-20', '20-21');
 
 CREATE TABLE grade_years (
-  id SERIAL PRIMARY KEY,
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   grade_level grade_level NOT NULL,
   school_year school_year NOT NULL,
-  state INTEGER REFERENCES states (id),
+  state UUID REFERENCES states (id),
   authorized_minutes_per_year INTEGER NOT NULL,
   UNIQUE (grade_level, school_year, state)
 );
@@ -601,7 +549,7 @@ INSERT INTO grade_years (grade_level, school_year, state, authorized_minutes_per
     ('11', '20-21', (SELECT id FROM states WHERE state_abbrev = 'AZ'), 900*60),
     ('12', '20-21', (SELECT id FROM states WHERE state_abbrev = 'AZ'), 900*60);
 
-CREATE FUNCTION valid_grade_enrollment(_during DATERANGE, _grade_years_id INTEGER) RETURNS BOOLEAN AS $$
+CREATE FUNCTION valid_grade_enrollment(_during DATERANGE, _grade_years_id UUID) RETURNS BOOLEAN AS $$
   BEGIN
     RETURN (SELECT CASE
 		             WHEN EXTRACT(YEAR FROM LOWER(DATERANGE(_during)))::TEXT = ('20' || (SUBSTRING(school_year::TEXT,0,POSITION('-' IN school_year::TEXT))))
@@ -615,9 +563,9 @@ CREATE FUNCTION valid_grade_enrollment(_during DATERANGE, _grade_years_id INTEGE
 $$ LANGUAGE plpgsql;
 
 CREATE TABLE grade_enrollments (
-  id SERIAL PRIMARY KEY,
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   student_id UUID NOT NULL REFERENCES students (id),
-  grade_years_id INTEGER NOT NULL REFERENCES grade_years (id),
+  grade_years_id UUID NOT NULL REFERENCES grade_years (id),
   during DATERANGE NOT NULL,
   CONSTRAINT during_grade_year CHECK (valid_grade_enrollment(during, grade_years_id)), --Added this to prevent a record from inserting that has a daterange outside of their grade_years.school_year
   EXCLUDE USING GIST (student_id WITH =, during WITH &&)
@@ -632,13 +580,13 @@ CREATE TABLE microschools (
   address_1 TEXT,
   address_2 TEXT,
   city TEXT,
-  state INTEGER REFERENCES states (id),
+  state UUID REFERENCES states (id),
   zip5 TEXT,
   zip4 TEXT,
   mailing_address_1 TEXT,
   mailing_address_2 TEXT,
   mailing_city TEXT,
-  mailing_state INTEGER REFERENCES states (id),
+  mailing_state UUID REFERENCES states (id),
   mailing_zip5 TEXT,
   mailing_zip4 TEXT,
   zoho_id TEXT UNIQUE,
@@ -662,7 +610,7 @@ CREATE TABLE microschool_terms (
 );
 
 CREATE TABLE staffing (
-  id SERIAL PRIMARY KEY,
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   microschool_terms_id UUID NOT NULL REFERENCES microschool_terms (id), --renamed this column to correctly reflect the association
   guide_id UUID NOT NULL REFERENCES adults (id),
   is_lead_guide BOOLEAN NOT NULL,
@@ -672,7 +620,7 @@ CREATE TABLE staffing (
 );
 
 CREATE TABLE guide_mentors (
-  id SERIAL PRIMARY KEY,
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   guide_id UUID NOT NULL REFERENCES adults (id),
   mentor_id UUID NOT NULL REFERENCES adults (id),
   CONSTRAINT unq_mentor_per_guide UNIQUE(mentor_id,guide_id)
@@ -680,7 +628,7 @@ CREATE TABLE guide_mentors (
 );
 
 CREATE TABLE microschool_enrollments (
-  id SERIAL PRIMARY KEY,
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   student_id UUID NOT NULL REFERENCES students (id),
   microschool_term_id UUID NOT NULL REFERENCES microschool_terms (id),
   authorized_minutes INTEGER,
@@ -690,7 +638,7 @@ CREATE TABLE microschool_enrollments (
 );
 
 CREATE TABLE funding_source_registrations (
-  id SERIAL PRIMARY KEY, -- added an id column to aid with creating test data
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   student_id UUID NOT NULL REFERENCES students (id),
   funding_source FUNDING_SOURCE NOT NULL,
   funding_source_student_id INTEGER,
@@ -699,7 +647,7 @@ CREATE TABLE funding_source_registrations (
 );
 
 CREATE TABLE funding_source_enrollments (
-  id SERIAL PRIMARY KEY,
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   student_id UUID NOT NULL,
   funding_source FUNDING_SOURCE NOT NULL,
   during DATERANGE NOT NULL,
@@ -712,7 +660,7 @@ CREATE TABLE funding_source_enrollments (
 CREATE TYPE attendance_types AS ENUM ('Attendance', 'Supplemental');
 
 CREATE TABLE attendance (
-  id SERIAL PRIMARY KEY,
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   student_id UUID NOT NULL REFERENCES students (id),
   attendance_date DATE NOT NULL,
   attendance_type ATTENDANCE_TYPES NOT NULL,
@@ -875,7 +823,7 @@ $$ LANGUAGE plpgsql;
 --   ADD A FUNCTION USED TO UPSERT ZOHO AND PRENDAWORLD ENROLLMENTS
 -- ------------------------------------------------------------------
 CREATE FUNCTION upsert_microschool_enrollments(_student_id UUID,
-                                                          _microschool_term_id INTEGER,
+                                                          _microschool_term_id UUID,
                                                           _authorized_minutes INTEGER,
                                                           _cents_per_minute INTEGER,
                                                           _during DATERANGE) RETURNS VOID AS $$
@@ -915,7 +863,7 @@ $$ LANGUAGE plpgsql;
 --   ADD A FUNCTION USED TO UPSERT GRADE_ENROLLMENTS
 -- ------------------------------------------------------------------
 CREATE FUNCTION upsert_grade_enrollments(_student_id UUID,
-                                                    _grade_years_id INTEGER,
+                                                    _grade_years_id UUID,
                                                     _during DATERANGE) RETURNS VOID AS $$
 BEGIN
     LOOP
@@ -1029,7 +977,7 @@ CREATE FUNCTION upsert_students(_complete_per funding_source,
                                            _enrollmentRange DATERANGE DEFAULT NULL,
                                            _grade_level grade_level DEFAULT NULL,
                                            _school_year school_year DEFAULT NULL) RETURNS VOID AS $$
-DECLARE studentId INTEGER;
+DECLARE studentId UUID;
 BEGIN
     LOOP
         -- First nullify the Prenda World ID of any record that has the same PW ID but different Zoho ID
@@ -1301,3 +1249,179 @@ BEGIN
     END LOOP;
 END;
 $$ LANGUAGE plpgsql;
+DROP TABLE IF EXISTS edkey_attendance_dump;
+DROP TABLE IF EXISTS edkey_students_dump;
+DROP TABLE IF EXISTS edkey_student_dump;
+DROP TABLE IF EXISTS edkey_course_enrollments_dump;
+DROP TABLE IF EXISTS prendaworld_attendance_dump;
+DROP TABLE IF EXISTS edkey_attendance_comparison;
+
+CREATE TABLE edkey_attendance_comparison(
+  year_month TEXT,
+  "Status" TEXT,
+  "PrendaWorldID" TEXT,
+  "PrendaWorldName" TEXT,
+  "SequoiaStudentID" TEXT,
+  "SequoiaName" TEXT,
+  "PrendaClassType" TEXT,
+  "SequoiaSectionID" TEXT,
+  "Date" Date,
+  "PrendaMinutes" INTEGER,
+  "SequoiaMinutes" INTEGER,
+  last_run_time TIMESTAMP,
+  UNIQUE ("SequoiaStudentID", "SequoiaSectionID", "Date")
+);
+CREATE TABLE prendaworld_attendance_dump(
+  "year_month" TEXT,
+  "partner" TEXT,
+  "Student" TEXT,
+  "PrendaWorldID" TEXT,
+  "SequoiaID" TEXT,
+  "Grade" TEXT,
+  "Type" TEXT,
+  "date" DATE,
+  "minutes" INTEGER
+);
+CREATE TABLE edkey_course_enrollments_dump(
+  "sectionid" INTEGER,
+  "course_name" TEXT,
+  "start_date" DATE,
+  "end_date" DATE,
+  "studentid" INTEGER
+);
+CREATE TABLE edkey_students_dump(
+  "ELMS_StudentID" TEXT,
+  "PS_StudentID" TEXT,
+  "PS_StudentNumber" TEXT,
+  "last_name" TEXT,
+  "first_name" TEXT,
+  "site" TEXT,
+  "entry_date" DATE,
+  "exit_date" DATE,
+  "grade_level" TEXT,
+  "date1" DATE,
+  "date2" DATE,
+  "date" DATE,
+  "total_minutes" INTEGER,
+  "date_generated" TEXT
+);
+CREATE TABLE edkey_attendance_dump(
+  "year_month" TEXT,
+  "Student Number" TEXT,
+  "RecordID" TEXT,
+  "Date" DATE,
+  "Attendance" INTEGER,
+  "Student" TEXT,
+  "SectionID" TEXT,
+  "Class" TEXT,
+  "LMS ID" TEXT,
+  "Modified on" TEXT,
+  "Synced on" TEXT,
+  "Absent" TEXT,
+  "Approved" TEXT,
+  "Reason" TEXT,
+  "StudentID" TEXT,
+  "SchoolID" TEXT
+);ALTER TABLE microschools ADD COLUMN club_id TEXT;
+UPDATE microschools SET club_id = pw_id;
+UPDATE microschools SET pw_id = null;
+
+CREATE TABLE fountain_dump
+(id SERIAL PRIMARY KEY
+,dumped_at TIMESTAMP DEFAULT NOW()
+,pw_guide_id TEXT
+,pw_microschool_id TEXT
+,pw_microschool_id_bad TEXT
+,zoho_guide_id TEXT
+,zoho_microschool_id TEXT
+,zoho_guide_microschool_id TEXT
+,hub_guide_id TEXT
+,hub_microschool_id TEXT
+,hub_microschool_term_id TEXT
+,hub_staffing_id TEXT
+-- below this line is data we get from Fountain --
+,email TEXT
+,name TEXT
+,first_name TEXT
+,last_name TEXT
+,phone_number TEXT
+,normalized_phone_number TEXT
+,data_guide_applicant_gatekeeping TEXT
+,data_state TEXT
+,data_guide_applicant_home_address TEXT[]
+,data_guide_applicant_microschool_address TEXT[]
+,data_microschool_zipcode TEXT
+,data_guide_applicant_grade_interest TEXT[]
+,data_guide_applicant_guide_motivation TEXT
+,data_guide_applicant_experience_with_children TEXT
+,data_guide_applicant_experience_type TEXT[]
+,data_guide_applicant_teaching_children TEXT
+,data_guide_applicant_student_management TEXT
+,data_guide_applicant_conflict_resolution TEXT
+,data_guide_applicant_difficult_learning TEXT
+,data_guide_applicant_student_recruitment TEXT
+,data_bgc_house_member_email_1 TEXT
+,data_bgc_house_member_email_2 TEXT
+,data_bgc_house_member_email_3 TEXT
+,data_guide_applicant_cpr_issue_date TEXT
+,data_guide_applicant_cpr_upload TEXT
+,data_guide_applicant_cv_change TEXT
+,data_guide_applicant_cv_covid TEXT
+,data_guide_applicant_cv_difficult_thing TEXT
+,data_guide_applicant_cv_experiences TEXT
+,data_guide_applicant_cv_guide_intention TEXT
+,data_guide_applicant_cv_hardest_learning TEXT
+,data_guide_applicant_cv_leadership TEXT
+,data_guide_applicant_cv_motivation TEXT
+,data_guide_applicant_cv_others_describe TEXT
+,data_guide_applicant_cv_powerful_experience TEXT
+,data_guide_applicant_cv_situation_right_over_easy TEXT
+,data_guide_applicant_cv_taught_new TEXT
+,data_guide_applicant_cv_trust TEXT
+,data_guide_applicant_cv_well_equipped TEXT
+,data_guide_applicant_educator_experience TEXT
+,data_guide_applicant_email TEXT
+,data_guide_applicant_experience_description TEXT
+,data_guide_applicant_fingerprint_expiration TEXT
+,data_guide_applicant_fingerprint_upload TEXT
+,data_guide_applicant_first_name TEXT
+,data_guide_applicant_last_name TEXT
+,data_guide_applicant_pe_conflict_resolution TEXT
+,data_guide_applicant_pe_difficult_learning TEXT
+,data_guide_applicant_pe_student_behavior TEXT
+,data_guide_applicant_pe_student_learning TEXT
+,data_guide_applicant_pe_student_management TEXT
+,data_guide_applicant_pe_student_progress TEXT
+,data_guide_applicant_references_one TEXT
+,data_guide_applicant_references_two TEXT
+,data_guide_applicant_virtual_site_inspection_url TEXT
+,data_utm_source TEXT
+,created_at TEXT
+,updated_at TEXT
+,receive_automated_emails BOOLEAN
+,labels TEXT[]
+,is_duplicate BOOLEAN
+,file_upload_requests TEXT[]
+,lessonly_lesson_results TEXT[]
+,lessonly_path_results TEXT[]
+,lessonly_course_results TEXT[]
+,addresses TEXT[]
+,fountain_id TEXT
+,last_transitioned_at TEXT
+,background_checks TEXT[]
+,document_signatures TEXT[]
+,document_uploads TEXT[]
+,zipcode TEXT
+,funnel_title TEXT
+,funnel_custom_id TEXT
+,funnel_id TEXT
+,funnel_location_name TEXT
+,funnel_location_id TEXT
+,funnel_location_latitude REAL
+,funnel_location_longitude REAL
+,funnel_location_location_group_name TEXT
+,funnel_location_location_group_id TEXT
+,stage_title TEXT
+,stage_id TEXT
+,stage_parent_id TEXT
+,score_cards_results TEXT[]);
