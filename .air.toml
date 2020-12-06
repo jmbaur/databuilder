@@ -11,7 +11,7 @@ cmd = "go build -o ./tmp/main ."
 # Binary file yields from `cmd`.
 bin = "tmp/main"
 # Customize binary.
-full_bin = "./tmp/main -connection postgres://user:pwd@localhost:6543/test -ignore dump -amount 10 -out out.sql ./assets/test_large.sql" # file
+full_bin = "./tmp/main -connection postgres://user:password@192.168.1.30:5432/test_db -ignore dump -amount 1 -out out.sql ./assets/test_large.sql" # file
 # full_bin = "cat assets/test_large.sql | ./tmp/main -connection postgres://user:pwd@localhost:6543/test -ignore dump -amount 10 -out out.sql" # stdin
 # Watch these filename extensions.
 include_ext = ["go"]

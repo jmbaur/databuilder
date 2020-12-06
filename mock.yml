@@ -1,0 +1,24 @@
+# API reference for mock types: https://pkg.go.dev/github.com/brianvoe/gofakeit#pkg-index
+# major entity types:
+#     https://pkg.go.dev/github.com/brianvoe/gofakeit#AddressInfo
+#     https://pkg.go.dev/github.com/brianvoe/gofakeit#ContactInfo
+#     https://pkg.go.dev/github.com/brianvoe/gofakeit#CreditCardInfo
+#     https://pkg.go.dev/github.com/brianvoe/gofakeit#JobInfo
+#     https://pkg.go.dev/github.com/brianvoe/gofakeit#PersonInfo
+
+tables:
+    - name: users # the name of the table
+      major_entities: [Person] # any gofakeit function that returns a struct and not a single value
+      ignore: false # tells program to skip this table
+      amount: 2
+      columns:
+          - name: first_name
+            mock_type: FirstName # a corresponding gofakeit function that returns a value appropriate for our use case
+          - name: last_name
+            mock_type: LastName
+          - name: age # a column with an integer type could produce large values that don't make sense in our context, provide min and max to mediate that
+            min: 0
+            max: 200
+    - name: table_to_be_ignored
+      ignore: true
+      amount: 0 # does the same as ignore=true

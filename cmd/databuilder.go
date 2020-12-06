@@ -1,90 +1,117 @@
 package cmd
 
 import (
-	"context"
+	"database/sql"
 	"flag"
+	"fmt"
 	"io"
+	"log"
+	"net/url"
 	"os"
 	"path/filepath"
-	"strings"
 
-	"github.com/jackc/pgx/v4/pgxpool"
-	"github.com/jmbaur/databuilder/logg"
-	"github.com/jmbaur/databuilder/mocker"
+	_ "github.com/lib/pq"
+
+	"github.com/jmbaur/databuilder/config"
 )
 
+// Execute is the entrypoint of the program
 func Execute() {
-	connection := flag.String("connection", "postgres://localhost:5432", "connection string to the database") // connection string to database
-	ignoreTables := flag.String("ignore", "", "tables to skip when creating mock data")                       // gets parsed as regexp
-	outFile := flag.String("out", "", "where to write output")                                                // used to write SQL expressions to file
-	amount := flag.Int("amount", 10, "how many rows to insert for each table")
+	connection := flag.String("connection", "postgres://localhost:5432", "Connection string to database")
+	configFile := flag.String("config", "mock.yml", "Path to config file")
+	outFile := flag.String("out", "", "Path to output file")
 	flag.Parse()
 
-	args := flag.Args()
-	if len(args) > 1 {
-		logg.Printf(logg.Fatal, "Cannot accept more than 1 arg\n")
-		os.Exit(1)
-	}
-	var reader io.Reader
-	if len(args) > 0 {
-		full, err := filepath.Abs(args[0])
-		if err != nil {
-			logg.Printf(logg.Fatal, "Could not get full path to file: %v\n", args[0])
-			os.Exit(1)
-		}
-		sqlFile, err := os.Open(full)
-		if err != nil {
-			logg.Printf(logg.Fatal, "Could not open file: %v\n", args[0])
-			os.Exit(1)
-		}
-		reader = sqlFile
-	} else {
-		fs, _ := os.Stdin.Stat()
-		if (fs.Mode() & os.ModeNamedPipe) == 0 {
-			logg.Printf(logg.Fatal, "No SQL passed through standard input\n")
-			os.Exit(1)
-		}
-		reader = os.Stdin
-	}
-
-	m := &mocker.Mocker{}
-	m.Parse(reader) // builds the Mocker object with tables and enums
-
-	conn, err := pgxpool.Connect(context.Background(), *connection)
+	// get config file
+	cfgFullPath, err := filepath.Abs(*configFile)
 	if err != nil {
-		logg.Printf(logg.Fatal, "Unable to connect to database: %v\n", err)
-		os.Exit(2)
+		log.Fatalf("could not get full path to config file %s: %v\n", *configFile, err)
+	}
+	cfgFile, err := os.Open(cfgFullPath)
+	cfg := config.Parse(cfgFile)
+
+	// get reader for SQL schema
+	args := flag.Args()
+	if len(args) != 1 {
+		log.Fatalln("did not specify where to read schema from")
+	}
+	schemaInputArg := flag.Args()[0]
+
+	var reader io.Reader
+	if schemaInputArg == "-" {
+		reader = os.Stdin
+	} else {
+		fullPath, err := filepath.Abs(schemaInputArg)
+		if err != nil {
+			log.Fatalf("could not get full path to schema file %s: %v\n", schemaInputArg, err)
+		}
+		file, err := os.Open(fullPath)
+		if err != nil {
+			log.Fatalf("could not open schema file %s: %v\n", fullPath, err)
+		}
+		reader = file
+	}
+
+	// get writer for SQL statements
+	var writer io.WriteCloser
+	if outFile == nil {
+		writer = os.Stdout
+	} else {
+		fullPath, err := filepath.Abs(*outFile)
+		if err != nil {
+			log.Fatalf("could not get full path for file %s: %v\n", *outFile, err)
+		}
+		os.Remove(fullPath)
+		file, err := os.Create(fullPath)
+		if err != nil {
+			log.Fatalf("unable to create file %s: %v\n", fullPath, err)
+		}
+		writer = file
+	}
+	defer writer.Close()
+
+	// get connection to database
+	parsedURL, err := url.Parse(*connection)
+	if err != nil {
+		log.Fatalf("could not parse connection string %s: %v\n", *connection, err)
+	}
+	// pq defaults sslmode=require, should we explicitly add sslmode=disable to the connection string arg?
+	// v := parsedURL.Query()
+	// v.Set("sslmode", "disable")
+	// parsedURL.RawQuery = v.Encode()
+	connStr := fmt.Sprint(parsedURL)
+
+	conn, err := sql.Open("postgres", connStr)
+	if err != nil {
+		log.Fatalf("unable to connect to database at %s: %v\n", *connection, err)
 	}
 	defer conn.Close()
 
-	m.Config = mocker.Config{
-		Db:           conn,
-		IgnoreTables: strings.Split(*ignoreTables, ","),
-		Amount:       *amount,
+	rows, err := conn.Query("SELECT now()")
+	if err != nil {
+		log.Fatal("failed to query database: ", err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var date string
+		rows.Scan(&date)
+		fmt.Printf("%+v\n", date)
 	}
 
-	if outFile != nil {
-		full, err := filepath.Abs(*outFile)
-		if err != nil {
-			logg.Printf(logg.Fatal, "Could not get full path to file: %v\n", *outFile)
-			os.Exit(2)
-		}
-		os.Remove(full)
-		file, err := os.Create(full)
-		if err != nil {
-			logg.Printf(logg.Fatal, "Unable to create file: %v\n", *outFile)
-			os.Exit(2)
-		}
-		defer file.Close()
-		if err := m.Mock(file); err != nil {
-			logg.Printf(logg.Fatal, "Unable to mock the database: %v\n", err)
-			os.Exit(3)
-		}
-	} else {
-		if err := m.Mock(os.Stdout); err != nil {
-			logg.Printf(logg.Fatal, "Unable to mock the database: %v\n", err)
-			os.Exit(3)
-		}
-	}
+	fmt.Println("IGNORE")
+	fmt.Println(cfg, reader)
 
+	// insertChan := make(chan db.Record)
+	// queryChan := make(chan string)
+	// done := make(chan bool)
+
+	// mock.Mock(reader, cfg)
+	// go db.WriteRecords(conn)
+	// go func() {
+	// 	for {
+	// 		<-done
+	// 	}
+	// }()
+
+	// m.Mock(writer)
 }

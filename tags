@@ -1,0 +1,995 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+Column	config/config.go	/^type Column struct {$/;"	t
+Config	config/config.go	/^type Config struct {$/;"	t
+Config	mocker/config.go	/^type Config struct {$/;"	t
+Execute	cmd/databuilder.go	/^func Execute() {$/;"	f
+Fatal	logg/logg.go	/^	Fatal$/;"	c
+Info	logg/logg.go	/^	Info = iota$/;"	c
+Mock	mocker/mock.go	/^func (m *Mocker) Mock(writer io.Writer) error {$/;"	f
+Mocker	mocker/config.go	/^type Mocker struct {$/;"	t
+Parse	config/config.go	/^func Parse(reader io.Reader) *Config {$/;"	f
+Parse	mocker/parse.go	/^func (m *Mocker) Parse(input io.Reader) {$/;"	f
+Printf	logg/logg.go	/^func Printf(level int, format string, v ...interface{}) {$/;"	f
+Table	config/config.go	/^type Table struct {$/;"	t
+Warn	logg/logg.go	/^	Warn$/;"	c
+Write	mocker/config.go	/^func (m *Mocker) Write(p []byte) (n int, err error) {$/;"	f
+adults	assets/test_dump.sql	/^CREATE TABLE public.adults ($/;"	t
+adults	assets/test_large.sql	/^CREATE TABLE adults ($/;"	t
+adults.address_1	assets/test_dump.sql	/^    address_1 text,$/;"	F
+adults.address_1	assets/test_large.sql	/^  address_1 TEXT,$/;"	F
+adults.address_2	assets/test_dump.sql	/^    address_2 text,$/;"	F
+adults.address_2	assets/test_large.sql	/^  address_2 TEXT,$/;"	F
+adults.city	assets/test_dump.sql	/^    city text,$/;"	F
+adults.city	assets/test_large.sql	/^  city TEXT,$/;"	F
+adults.email	assets/test_dump.sql	/^    email text NOT NULL,$/;"	F
+adults.email	assets/test_large.sql	/^  email TEXT NOT NULL,$/;"	F
+adults.first_name	assets/test_dump.sql	/^    first_name text NOT NULL,$/;"	F
+adults.first_name	assets/test_large.sql	/^  first_name TEXT NOT NULL,$/;"	F
+adults.id	assets/test_dump.sql	/^    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,$/;"	F
+adults.id	assets/test_large.sql	/^  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),$/;"	F
+adults.is_guardian	assets/test_dump.sql	/^    is_guardian boolean DEFAULT false NOT NULL,$/;"	F
+adults.is_guardian	assets/test_large.sql	/^  is_guardian BOOLEAN NOT NULL DEFAULT false,$/;"	F
+adults.is_guide	assets/test_dump.sql	/^    is_guide boolean DEFAULT false NOT NULL,$/;"	F
+adults.is_guide	assets/test_large.sql	/^  is_guide BOOLEAN NOT NULL DEFAULT false,$/;"	F
+adults.last_name	assets/test_dump.sql	/^    last_name text NOT NULL,$/;"	F
+adults.last_name	assets/test_large.sql	/^  last_name TEXT NOT NULL,$/;"	F
+adults.middle_name	assets/test_dump.sql	/^    middle_name text,$/;"	F
+adults.middle_name	assets/test_large.sql	/^  middle_name TEXT, --Added this to be more inline with how we are storing names for students$/;"	F
+adults.phone	assets/test_dump.sql	/^    phone text,$/;"	F
+adults.phone	assets/test_large.sql	/^  phone TEXT,$/;"	F
+adults.prefix	assets/test_dump.sql	/^    prefix text,$/;"	F
+adults.prefix	assets/test_large.sql	/^  prefix TEXT, --Added this because if we are going to include suffix then why not$/;"	F
+adults.pw_id	assets/test_dump.sql	/^    pw_id text,$/;"	F
+adults.pw_id	assets/test_large.sql	/^  pw_id TEXT UNIQUE,$/;"	F
+adults.state	assets/test_dump.sql	/^    state text,$/;"	F
+adults.state	assets/test_large.sql	/^  state TEXT,$/;"	F
+adults.suffix	assets/test_dump.sql	/^    suffix text,$/;"	F
+adults.suffix	assets/test_large.sql	/^  suffix TEXT, --Added this because I saw a few cases in Zoho where the suffix was being appended to the last name$/;"	F
+adults.temp_lead_guide	assets/test_dump.sql	/^    temp_lead_guide boolean$/;"	F
+adults.temp_lead_guide	assets/test_large.sql	/^  temp_lead_guide BOOLEAN$/;"	F
+adults.zip4	assets/test_dump.sql	/^    zip4 text,$/;"	F
+adults.zip4	assets/test_large.sql	/^  zip4 TEXT,$/;"	F
+adults.zip5	assets/test_dump.sql	/^    zip5 text,$/;"	F
+adults.zip5	assets/test_large.sql	/^  zip5 TEXT,$/;"	F
+adults.zoho_id	assets/test_dump.sql	/^    zoho_id text,$/;"	F
+adults.zoho_id	assets/test_large.sql	/^  zoho_id TEXT UNIQUE,$/;"	F
+alterTable	mocker/util.go	/^func (m *Mocker) alterTable(alterStmt nodes.AlterTableStmt) error {$/;"	f
+applications	assets/test_dump.sql	/^CREATE TABLE public.applications ($/;"	t
+applications	assets/test_large.sql	/^CREATE TABLE applications ($/;"	t
+applications.application_status	assets/test_dump.sql	/^    application_status public.application_status NOT NULL,$/;"	F
+applications.application_status	assets/test_large.sql	/^  application_status application_status NOT NULL,$/;"	F
+applications.document	assets/test_dump.sql	/^    document jsonb,$/;"	F
+applications.document	assets/test_large.sql	/^  document JSONB,$/;"	F
+applications.files	assets/test_dump.sql	/^    files jsonb$/;"	F
+applications.funding_source	assets/test_dump.sql	/^    funding_source text,$/;"	F
+applications.funding_source	assets/test_large.sql	/^  funding_source TEXT,$/;"	F
+applications.id	assets/test_dump.sql	/^    id integer NOT NULL,$/;"	F
+applications.id	assets/test_large.sql	/^  id SERIAL PRIMARY KEY,$/;"	F
+applications.school_year	assets/test_dump.sql	/^    school_year text NOT NULL,$/;"	F
+applications.school_year	assets/test_large.sql	/^  school_year TEXT NOT NULL,$/;"	F
+applications.zoho_microschool_id	assets/test_dump.sql	/^    zoho_microschool_id text,$/;"	F
+applications.zoho_microschool_id	assets/test_large.sql	/^  zoho_microschool_id TEXT,$/;"	F
+applications.zoho_student_id	assets/test_dump.sql	/^    zoho_student_id text NOT NULL,$/;"	F
+applications.zoho_student_id	assets/test_large.sql	/^  zoho_student_id TEXT NOT NULL,$/;"	F
+attendance	assets/test_dump.sql	/^CREATE TABLE public.attendance ($/;"	t
+attendance	assets/test_large.sql	/^CREATE TABLE attendance ($/;"	t
+attendance.approved_at_utc	assets/test_dump.sql	/^    approved_at_utc timestamp without time zone,$/;"	F
+attendance.approved_at_utc	assets/test_large.sql	/^  approved_at_utc TIMESTAMP,$/;"	F
+attendance.approved_email	assets/test_dump.sql	/^    approved_email text,$/;"	F
+attendance.approved_email	assets/test_large.sql	/^  approved_email TEXT,$/;"	F
+attendance.approved_ip	assets/test_dump.sql	/^    approved_ip text$/;"	F
+attendance.approved_ip	assets/test_large.sql	/^  approved_ip TEXT,$/;"	F
+attendance.attendance_date	assets/test_dump.sql	/^    attendance_date date NOT NULL,$/;"	F
+attendance.attendance_date	assets/test_large.sql	/^  attendance_date DATE NOT NULL,$/;"	F
+attendance.attendance_type	assets/test_dump.sql	/^    attendance_type public.attendance_types NOT NULL,$/;"	F
+attendance.attendance_type	assets/test_large.sql	/^  attendance_type ATTENDANCE_TYPES NOT NULL,$/;"	F
+attendance.id	assets/test_dump.sql	/^    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,$/;"	F
+attendance.id	assets/test_large.sql	/^  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),$/;"	F
+attendance.minutes	assets/test_dump.sql	/^    minutes integer NOT NULL,$/;"	F
+attendance.minutes	assets/test_large.sql	/^  minutes INTEGER NOT NULL,$/;"	F
+attendance.student_id	assets/test_dump.sql	/^    student_id uuid NOT NULL,$/;"	F
+attendance.student_id	assets/test_large.sql	/^  student_id UUID NOT NULL REFERENCES students (id),$/;"	F
+buildInsertStmt	mocker/work.go	/^func buildInsertStmt(records []record, table string) (*string, error) {$/;"	f
+cmd	cmd/databuilder.go	/^package cmd$/;"	p
+config	config/config.go	/^package config$/;"	p
+createEnum	mocker/util.go	/^func (m *Mocker) createEnum(enum nodes.CreateEnumStmt) error {$/;"	f
+createTable	mocker/util.go	/^func (m *Mocker) createTable(table nodes.CreateStmt, ifNotExists bool) error {$/;"	f
+data_exceptions	assets/test_dump.sql	/^CREATE TABLE public.data_exceptions ($/;"	t
+data_exceptions	assets/test_large.sql	/^CREATE TABLE data_exceptions($/;"	t
+data_exceptions.created_at	assets/test_dump.sql	/^    created_at timestamp without time zone DEFAULT now()$/;"	F
+data_exceptions.created_at	assets/test_large.sql	/^  created_at TIMESTAMP DEFAULT NOW()$/;"	F
+data_exceptions.data_process	assets/test_dump.sql	/^    data_process text,$/;"	F
+data_exceptions.data_process	assets/test_large.sql	/^  data_process TEXT,$/;"	F
+data_exceptions.data_source	assets/test_dump.sql	/^    data_source text,$/;"	F
+data_exceptions.data_source	assets/test_large.sql	/^  data_source TEXT,$/;"	F
+data_exceptions.details	assets/test_dump.sql	/^    details jsonb,$/;"	F
+data_exceptions.details	assets/test_large.sql	/^  details JSONB,$/;"	F
+data_exceptions.fixed	assets/test_dump.sql	/^    fixed boolean DEFAULT false,$/;"	F
+data_exceptions.fixed	assets/test_large.sql	/^  fixed BOOLEAN DEFAULT false, $/;"	F
+data_exceptions.id	assets/test_dump.sql	/^    id integer NOT NULL,$/;"	F
+data_exceptions.id	assets/test_large.sql	/^  id SERIAL,$/;"	F
+dropEnum	mocker/util.go	/^func (m *Mocker) dropEnum(name string) error {$/;"	f
+dropTable	mocker/util.go	/^func (m *Mocker) dropTable(tableName string) error {$/;"	f
+edkey_attendance_comparison	assets/test_dump.sql	/^CREATE TABLE public.edkey_attendance_comparison ($/;"	t
+edkey_attendance_comparison	assets/test_large.sql	/^CREATE TABLE edkey_attendance_comparison($/;"	t
+edkey_attendance_comparison.Date	assets/test_dump.sql	/^    "Date" date,$/;"	F
+edkey_attendance_comparison.Date	assets/test_large.sql	/^  "Date" Date,$/;"	F
+edkey_attendance_comparison.PrendaClassType	assets/test_dump.sql	/^    "PrendaClassType" text,$/;"	F
+edkey_attendance_comparison.PrendaClassType	assets/test_large.sql	/^  "PrendaClassType" TEXT,$/;"	F
+edkey_attendance_comparison.PrendaMinutes	assets/test_dump.sql	/^    "PrendaMinutes" integer,$/;"	F
+edkey_attendance_comparison.PrendaMinutes	assets/test_large.sql	/^  "PrendaMinutes" INTEGER,$/;"	F
+edkey_attendance_comparison.PrendaWorldID	assets/test_dump.sql	/^    "PrendaWorldID" text,$/;"	F
+edkey_attendance_comparison.PrendaWorldID	assets/test_large.sql	/^  "PrendaWorldID" TEXT,$/;"	F
+edkey_attendance_comparison.PrendaWorldName	assets/test_dump.sql	/^    "PrendaWorldName" text,$/;"	F
+edkey_attendance_comparison.PrendaWorldName	assets/test_large.sql	/^  "PrendaWorldName" TEXT,$/;"	F
+edkey_attendance_comparison.SequoiaMinutes	assets/test_dump.sql	/^    "SequoiaMinutes" integer,$/;"	F
+edkey_attendance_comparison.SequoiaMinutes	assets/test_large.sql	/^  "SequoiaMinutes" INTEGER,$/;"	F
+edkey_attendance_comparison.SequoiaName	assets/test_dump.sql	/^    "SequoiaName" text,$/;"	F
+edkey_attendance_comparison.SequoiaName	assets/test_large.sql	/^  "SequoiaName" TEXT,$/;"	F
+edkey_attendance_comparison.SequoiaSectionID	assets/test_dump.sql	/^    "SequoiaSectionID" text,$/;"	F
+edkey_attendance_comparison.SequoiaSectionID	assets/test_large.sql	/^  "SequoiaSectionID" TEXT,$/;"	F
+edkey_attendance_comparison.SequoiaStudentID	assets/test_dump.sql	/^    "SequoiaStudentID" text,$/;"	F
+edkey_attendance_comparison.SequoiaStudentID	assets/test_large.sql	/^  "SequoiaStudentID" TEXT,$/;"	F
+edkey_attendance_comparison.Status	assets/test_dump.sql	/^    "Status" text,$/;"	F
+edkey_attendance_comparison.Status	assets/test_large.sql	/^  "Status" TEXT,$/;"	F
+edkey_attendance_comparison.last_run_time	assets/test_dump.sql	/^    last_run_time timestamp without time zone$/;"	F
+edkey_attendance_comparison.last_run_time	assets/test_large.sql	/^  last_run_time TIMESTAMP,$/;"	F
+edkey_attendance_comparison.year_month	assets/test_dump.sql	/^    year_month text,$/;"	F
+edkey_attendance_comparison.year_month	assets/test_large.sql	/^  year_month TEXT,$/;"	F
+edkey_attendance_dump	assets/test_dump.sql	/^CREATE TABLE public.edkey_attendance_dump ($/;"	t
+edkey_attendance_dump	assets/test_large.sql	/^CREATE TABLE edkey_attendance_dump($/;"	t
+edkey_attendance_dump.Absent	assets/test_dump.sql	/^    "Absent" text,$/;"	F
+edkey_attendance_dump.Absent	assets/test_large.sql	/^  "Absent" TEXT,$/;"	F
+edkey_attendance_dump.Approved	assets/test_dump.sql	/^    "Approved" text,$/;"	F
+edkey_attendance_dump.Approved	assets/test_large.sql	/^  "Approved" TEXT,$/;"	F
+edkey_attendance_dump.Attendance	assets/test_dump.sql	/^    "Attendance" integer,$/;"	F
+edkey_attendance_dump.Attendance	assets/test_large.sql	/^  "Attendance" INTEGER,$/;"	F
+edkey_attendance_dump.Class	assets/test_dump.sql	/^    "Class" text,$/;"	F
+edkey_attendance_dump.Class	assets/test_large.sql	/^  "Class" TEXT,$/;"	F
+edkey_attendance_dump.Date	assets/test_dump.sql	/^    "Date" date,$/;"	F
+edkey_attendance_dump.Date	assets/test_large.sql	/^  "Date" DATE,$/;"	F
+edkey_attendance_dump.LMS ID	assets/test_dump.sql	/^    "LMS ID" text,$/;"	F
+edkey_attendance_dump.LMS ID	assets/test_large.sql	/^  "LMS ID" TEXT,$/;"	F
+edkey_attendance_dump.Modified on	assets/test_dump.sql	/^    "Modified on" text,$/;"	F
+edkey_attendance_dump.Modified on	assets/test_large.sql	/^  "Modified on" TEXT,$/;"	F
+edkey_attendance_dump.Reason	assets/test_dump.sql	/^    "Reason" text,$/;"	F
+edkey_attendance_dump.Reason	assets/test_large.sql	/^  "Reason" TEXT,$/;"	F
+edkey_attendance_dump.RecordID	assets/test_dump.sql	/^    "RecordID" text,$/;"	F
+edkey_attendance_dump.RecordID	assets/test_large.sql	/^  "RecordID" TEXT,$/;"	F
+edkey_attendance_dump.SchoolID	assets/test_dump.sql	/^    "SchoolID" text$/;"	F
+edkey_attendance_dump.SchoolID	assets/test_large.sql	/^  "SchoolID" TEXT$/;"	F
+edkey_attendance_dump.SectionID	assets/test_dump.sql	/^    "SectionID" text,$/;"	F
+edkey_attendance_dump.SectionID	assets/test_large.sql	/^  "SectionID" TEXT,$/;"	F
+edkey_attendance_dump.Student	assets/test_dump.sql	/^    "Student" text,$/;"	F
+edkey_attendance_dump.Student	assets/test_large.sql	/^  "Student" TEXT,$/;"	F
+edkey_attendance_dump.Student Number	assets/test_dump.sql	/^    "Student Number" text,$/;"	F
+edkey_attendance_dump.Student Number	assets/test_large.sql	/^  "Student Number" TEXT,$/;"	F
+edkey_attendance_dump.StudentID	assets/test_dump.sql	/^    "StudentID" text,$/;"	F
+edkey_attendance_dump.StudentID	assets/test_large.sql	/^  "StudentID" TEXT,$/;"	F
+edkey_attendance_dump.Synced on	assets/test_dump.sql	/^    "Synced on" text,$/;"	F
+edkey_attendance_dump.Synced on	assets/test_large.sql	/^  "Synced on" TEXT,$/;"	F
+edkey_attendance_dump.year_month	assets/test_dump.sql	/^    year_month text,$/;"	F
+edkey_attendance_dump.year_month	assets/test_large.sql	/^  "year_month" TEXT,$/;"	F
+edkey_course_enrollments_dump	assets/test_dump.sql	/^CREATE TABLE public.edkey_course_enrollments_dump ($/;"	t
+edkey_course_enrollments_dump	assets/test_large.sql	/^CREATE TABLE edkey_course_enrollments_dump($/;"	t
+edkey_course_enrollments_dump.course_name	assets/test_dump.sql	/^    course_name text,$/;"	F
+edkey_course_enrollments_dump.course_name	assets/test_large.sql	/^  "course_name" TEXT,$/;"	F
+edkey_course_enrollments_dump.end_date	assets/test_dump.sql	/^    end_date date,$/;"	F
+edkey_course_enrollments_dump.end_date	assets/test_large.sql	/^  "end_date" DATE,$/;"	F
+edkey_course_enrollments_dump.sectionid	assets/test_dump.sql	/^    sectionid integer,$/;"	F
+edkey_course_enrollments_dump.sectionid	assets/test_large.sql	/^  "sectionid" INTEGER,$/;"	F
+edkey_course_enrollments_dump.start_date	assets/test_dump.sql	/^    start_date date,$/;"	F
+edkey_course_enrollments_dump.start_date	assets/test_large.sql	/^  "start_date" DATE,$/;"	F
+edkey_course_enrollments_dump.studentid	assets/test_dump.sql	/^    studentid integer$/;"	F
+edkey_course_enrollments_dump.studentid	assets/test_large.sql	/^  "studentid" INTEGER$/;"	F
+edkey_students_dump	assets/test_dump.sql	/^CREATE TABLE public.edkey_students_dump ($/;"	t
+edkey_students_dump	assets/test_large.sql	/^CREATE TABLE edkey_students_dump($/;"	t
+edkey_students_dump.ELMS_StudentID	assets/test_dump.sql	/^    "ELMS_StudentID" text,$/;"	F
+edkey_students_dump.ELMS_StudentID	assets/test_large.sql	/^  "ELMS_StudentID" TEXT,$/;"	F
+edkey_students_dump.PS_StudentID	assets/test_dump.sql	/^    "PS_StudentID" text,$/;"	F
+edkey_students_dump.PS_StudentID	assets/test_large.sql	/^  "PS_StudentID" TEXT,$/;"	F
+edkey_students_dump.PS_StudentNumber	assets/test_dump.sql	/^    "PS_StudentNumber" text,$/;"	F
+edkey_students_dump.PS_StudentNumber	assets/test_large.sql	/^  "PS_StudentNumber" TEXT,$/;"	F
+edkey_students_dump.date	assets/test_dump.sql	/^    date date,$/;"	F
+edkey_students_dump.date	assets/test_large.sql	/^  "date" DATE,$/;"	F
+edkey_students_dump.date1	assets/test_dump.sql	/^    date1 date,$/;"	F
+edkey_students_dump.date1	assets/test_large.sql	/^  "date1" DATE,$/;"	F
+edkey_students_dump.date2	assets/test_dump.sql	/^    date2 date,$/;"	F
+edkey_students_dump.date2	assets/test_large.sql	/^  "date2" DATE,$/;"	F
+edkey_students_dump.date_generated	assets/test_dump.sql	/^    date_generated text$/;"	F
+edkey_students_dump.date_generated	assets/test_large.sql	/^  "date_generated" TEXT$/;"	F
+edkey_students_dump.entry_date	assets/test_dump.sql	/^    entry_date date,$/;"	F
+edkey_students_dump.entry_date	assets/test_large.sql	/^  "entry_date" DATE,$/;"	F
+edkey_students_dump.exit_date	assets/test_dump.sql	/^    exit_date date,$/;"	F
+edkey_students_dump.exit_date	assets/test_large.sql	/^  "exit_date" DATE,$/;"	F
+edkey_students_dump.first_name	assets/test_dump.sql	/^    first_name text,$/;"	F
+edkey_students_dump.first_name	assets/test_large.sql	/^  "first_name" TEXT,$/;"	F
+edkey_students_dump.grade_level	assets/test_dump.sql	/^    grade_level text,$/;"	F
+edkey_students_dump.grade_level	assets/test_large.sql	/^  "grade_level" TEXT,$/;"	F
+edkey_students_dump.last_name	assets/test_dump.sql	/^    last_name text,$/;"	F
+edkey_students_dump.last_name	assets/test_large.sql	/^  "last_name" TEXT,$/;"	F
+edkey_students_dump.site	assets/test_dump.sql	/^    site text,$/;"	F
+edkey_students_dump.site	assets/test_large.sql	/^  "site" TEXT,$/;"	F
+edkey_students_dump.total_minutes	assets/test_dump.sql	/^    total_minutes integer,$/;"	F
+edkey_students_dump.total_minutes	assets/test_large.sql	/^  "total_minutes" INTEGER,$/;"	F
+findColumn	mocker/util.go	/^func (m *Mocker) findColumn(tableIdx int, columnName string) int {$/;"	f
+findConstraint	mocker/util.go	/^func (m *Mocker) findConstraint(tableIdx int, conName string) int {$/;"	f
+findEnum	mocker/util.go	/^func (m *Mocker) findEnum(name string) int {$/;"	f
+findEnumDef	mocker/mock.go	/^func findEnumDef(enums []nodes.CreateEnumStmt, enumName string) int {$/;"	f
+findForeignConstraint	mocker/mock.go	/^func findForeignConstraint(columnConstraints []nodes.Node) int {$/;"	f
+findTable	mocker/util.go	/^func (m *Mocker) findTable(tableName string) int {$/;"	f
+fountain_dump	assets/test_dump.sql	/^CREATE TABLE public.fountain_dump ($/;"	t
+fountain_dump	assets/test_large.sql	/^CREATE TABLE fountain_dump$/;"	t
+fountain_dump.addresses	assets/test_dump.sql	/^    addresses text[],$/;"	F
+fountain_dump.addresses	assets/test_large.sql	/^,addresses TEXT[]$/;"	F
+fountain_dump.background_checks	assets/test_dump.sql	/^    background_checks text[],$/;"	F
+fountain_dump.background_checks	assets/test_large.sql	/^,background_checks TEXT[]$/;"	F
+fountain_dump.created_at	assets/test_dump.sql	/^    created_at text,$/;"	F
+fountain_dump.created_at	assets/test_large.sql	/^,created_at TEXT$/;"	F
+fountain_dump.data_bgc_house_member_email_1	assets/test_dump.sql	/^    data_bgc_house_member_email_1 text,$/;"	F
+fountain_dump.data_bgc_house_member_email_1	assets/test_large.sql	/^,data_bgc_house_member_email_1 TEXT$/;"	F
+fountain_dump.data_bgc_house_member_email_2	assets/test_dump.sql	/^    data_bgc_house_member_email_2 text,$/;"	F
+fountain_dump.data_bgc_house_member_email_2	assets/test_large.sql	/^,data_bgc_house_member_email_2 TEXT$/;"	F
+fountain_dump.data_bgc_house_member_email_3	assets/test_dump.sql	/^    data_bgc_house_member_email_3 text,$/;"	F
+fountain_dump.data_bgc_house_member_email_3	assets/test_large.sql	/^,data_bgc_house_member_email_3 TEXT$/;"	F
+fountain_dump.data_guide_applicant_conflict_resolution	assets/test_dump.sql	/^    data_guide_applicant_conflict_resolution text,$/;"	F
+fountain_dump.data_guide_applicant_conflict_resolution	assets/test_large.sql	/^,data_guide_applicant_conflict_resolution TEXT$/;"	F
+fountain_dump.data_guide_applicant_cpr_issue_date	assets/test_dump.sql	/^    data_guide_applicant_cpr_issue_date text,$/;"	F
+fountain_dump.data_guide_applicant_cpr_issue_date	assets/test_large.sql	/^,data_guide_applicant_cpr_issue_date TEXT$/;"	F
+fountain_dump.data_guide_applicant_cpr_upload	assets/test_dump.sql	/^    data_guide_applicant_cpr_upload text,$/;"	F
+fountain_dump.data_guide_applicant_cpr_upload	assets/test_large.sql	/^,data_guide_applicant_cpr_upload TEXT$/;"	F
+fountain_dump.data_guide_applicant_cv_change	assets/test_dump.sql	/^    data_guide_applicant_cv_change text,$/;"	F
+fountain_dump.data_guide_applicant_cv_change	assets/test_large.sql	/^,data_guide_applicant_cv_change TEXT$/;"	F
+fountain_dump.data_guide_applicant_cv_covid	assets/test_dump.sql	/^    data_guide_applicant_cv_covid text,$/;"	F
+fountain_dump.data_guide_applicant_cv_covid	assets/test_large.sql	/^,data_guide_applicant_cv_covid TEXT$/;"	F
+fountain_dump.data_guide_applicant_cv_difficult_thing	assets/test_dump.sql	/^    data_guide_applicant_cv_difficult_thing text,$/;"	F
+fountain_dump.data_guide_applicant_cv_difficult_thing	assets/test_large.sql	/^,data_guide_applicant_cv_difficult_thing TEXT$/;"	F
+fountain_dump.data_guide_applicant_cv_experiences	assets/test_dump.sql	/^    data_guide_applicant_cv_experiences text,$/;"	F
+fountain_dump.data_guide_applicant_cv_experiences	assets/test_large.sql	/^,data_guide_applicant_cv_experiences TEXT$/;"	F
+fountain_dump.data_guide_applicant_cv_guide_intention	assets/test_dump.sql	/^    data_guide_applicant_cv_guide_intention text,$/;"	F
+fountain_dump.data_guide_applicant_cv_guide_intention	assets/test_large.sql	/^,data_guide_applicant_cv_guide_intention TEXT$/;"	F
+fountain_dump.data_guide_applicant_cv_hardest_learning	assets/test_dump.sql	/^    data_guide_applicant_cv_hardest_learning text,$/;"	F
+fountain_dump.data_guide_applicant_cv_hardest_learning	assets/test_large.sql	/^,data_guide_applicant_cv_hardest_learning TEXT$/;"	F
+fountain_dump.data_guide_applicant_cv_leadership	assets/test_dump.sql	/^    data_guide_applicant_cv_leadership text,$/;"	F
+fountain_dump.data_guide_applicant_cv_leadership	assets/test_large.sql	/^,data_guide_applicant_cv_leadership TEXT$/;"	F
+fountain_dump.data_guide_applicant_cv_motivation	assets/test_dump.sql	/^    data_guide_applicant_cv_motivation text,$/;"	F
+fountain_dump.data_guide_applicant_cv_motivation	assets/test_large.sql	/^,data_guide_applicant_cv_motivation TEXT$/;"	F
+fountain_dump.data_guide_applicant_cv_others_describe	assets/test_dump.sql	/^    data_guide_applicant_cv_others_describe text,$/;"	F
+fountain_dump.data_guide_applicant_cv_others_describe	assets/test_large.sql	/^,data_guide_applicant_cv_others_describe TEXT$/;"	F
+fountain_dump.data_guide_applicant_cv_powerful_experience	assets/test_dump.sql	/^    data_guide_applicant_cv_powerful_experience text,$/;"	F
+fountain_dump.data_guide_applicant_cv_powerful_experience	assets/test_large.sql	/^,data_guide_applicant_cv_powerful_experience TEXT$/;"	F
+fountain_dump.data_guide_applicant_cv_situation_right_over_easy	assets/test_dump.sql	/^    data_guide_applicant_cv_situation_right_over_easy text,$/;"	F
+fountain_dump.data_guide_applicant_cv_situation_right_over_easy	assets/test_large.sql	/^,data_guide_applicant_cv_situation_right_over_easy TEXT$/;"	F
+fountain_dump.data_guide_applicant_cv_taught_new	assets/test_dump.sql	/^    data_guide_applicant_cv_taught_new text,$/;"	F
+fountain_dump.data_guide_applicant_cv_taught_new	assets/test_large.sql	/^,data_guide_applicant_cv_taught_new TEXT$/;"	F
+fountain_dump.data_guide_applicant_cv_trust	assets/test_dump.sql	/^    data_guide_applicant_cv_trust text,$/;"	F
+fountain_dump.data_guide_applicant_cv_trust	assets/test_large.sql	/^,data_guide_applicant_cv_trust TEXT$/;"	F
+fountain_dump.data_guide_applicant_cv_well_equipped	assets/test_dump.sql	/^    data_guide_applicant_cv_well_equipped text,$/;"	F
+fountain_dump.data_guide_applicant_cv_well_equipped	assets/test_large.sql	/^,data_guide_applicant_cv_well_equipped TEXT$/;"	F
+fountain_dump.data_guide_applicant_difficult_learning	assets/test_dump.sql	/^    data_guide_applicant_difficult_learning text,$/;"	F
+fountain_dump.data_guide_applicant_difficult_learning	assets/test_large.sql	/^,data_guide_applicant_difficult_learning TEXT$/;"	F
+fountain_dump.data_guide_applicant_educator_experience	assets/test_dump.sql	/^    data_guide_applicant_educator_experience text,$/;"	F
+fountain_dump.data_guide_applicant_educator_experience	assets/test_large.sql	/^,data_guide_applicant_educator_experience TEXT$/;"	F
+fountain_dump.data_guide_applicant_email	assets/test_dump.sql	/^    data_guide_applicant_email text,$/;"	F
+fountain_dump.data_guide_applicant_email	assets/test_large.sql	/^,data_guide_applicant_email TEXT$/;"	F
+fountain_dump.data_guide_applicant_experience_description	assets/test_dump.sql	/^    data_guide_applicant_experience_description text,$/;"	F
+fountain_dump.data_guide_applicant_experience_description	assets/test_large.sql	/^,data_guide_applicant_experience_description TEXT$/;"	F
+fountain_dump.data_guide_applicant_experience_type	assets/test_dump.sql	/^    data_guide_applicant_experience_type text[],$/;"	F
+fountain_dump.data_guide_applicant_experience_type	assets/test_large.sql	/^,data_guide_applicant_experience_type TEXT[]$/;"	F
+fountain_dump.data_guide_applicant_experience_with_children	assets/test_dump.sql	/^    data_guide_applicant_experience_with_children text,$/;"	F
+fountain_dump.data_guide_applicant_experience_with_children	assets/test_large.sql	/^,data_guide_applicant_experience_with_children TEXT$/;"	F
+fountain_dump.data_guide_applicant_fingerprint_expiration	assets/test_dump.sql	/^    data_guide_applicant_fingerprint_expiration text,$/;"	F
+fountain_dump.data_guide_applicant_fingerprint_expiration	assets/test_large.sql	/^,data_guide_applicant_fingerprint_expiration TEXT$/;"	F
+fountain_dump.data_guide_applicant_fingerprint_upload	assets/test_dump.sql	/^    data_guide_applicant_fingerprint_upload text,$/;"	F
+fountain_dump.data_guide_applicant_fingerprint_upload	assets/test_large.sql	/^,data_guide_applicant_fingerprint_upload TEXT$/;"	F
+fountain_dump.data_guide_applicant_first_name	assets/test_dump.sql	/^    data_guide_applicant_first_name text,$/;"	F
+fountain_dump.data_guide_applicant_first_name	assets/test_large.sql	/^,data_guide_applicant_first_name TEXT$/;"	F
+fountain_dump.data_guide_applicant_gatekeeping	assets/test_dump.sql	/^    data_guide_applicant_gatekeeping text,$/;"	F
+fountain_dump.data_guide_applicant_gatekeeping	assets/test_large.sql	/^,data_guide_applicant_gatekeeping TEXT$/;"	F
+fountain_dump.data_guide_applicant_grade_interest	assets/test_dump.sql	/^    data_guide_applicant_grade_interest text[],$/;"	F
+fountain_dump.data_guide_applicant_grade_interest	assets/test_large.sql	/^,data_guide_applicant_grade_interest TEXT[]$/;"	F
+fountain_dump.data_guide_applicant_guide_motivation	assets/test_dump.sql	/^    data_guide_applicant_guide_motivation text,$/;"	F
+fountain_dump.data_guide_applicant_guide_motivation	assets/test_large.sql	/^,data_guide_applicant_guide_motivation TEXT$/;"	F
+fountain_dump.data_guide_applicant_home_address	assets/test_dump.sql	/^    data_guide_applicant_home_address text[],$/;"	F
+fountain_dump.data_guide_applicant_home_address	assets/test_large.sql	/^,data_guide_applicant_home_address TEXT[]$/;"	F
+fountain_dump.data_guide_applicant_last_name	assets/test_dump.sql	/^    data_guide_applicant_last_name text,$/;"	F
+fountain_dump.data_guide_applicant_last_name	assets/test_large.sql	/^,data_guide_applicant_last_name TEXT$/;"	F
+fountain_dump.data_guide_applicant_microschool_address	assets/test_dump.sql	/^    data_guide_applicant_microschool_address text[],$/;"	F
+fountain_dump.data_guide_applicant_microschool_address	assets/test_large.sql	/^,data_guide_applicant_microschool_address TEXT[]$/;"	F
+fountain_dump.data_guide_applicant_pe_conflict_resolution	assets/test_dump.sql	/^    data_guide_applicant_pe_conflict_resolution text,$/;"	F
+fountain_dump.data_guide_applicant_pe_conflict_resolution	assets/test_large.sql	/^,data_guide_applicant_pe_conflict_resolution TEXT$/;"	F
+fountain_dump.data_guide_applicant_pe_difficult_learning	assets/test_dump.sql	/^    data_guide_applicant_pe_difficult_learning text,$/;"	F
+fountain_dump.data_guide_applicant_pe_difficult_learning	assets/test_large.sql	/^,data_guide_applicant_pe_difficult_learning TEXT$/;"	F
+fountain_dump.data_guide_applicant_pe_student_behavior	assets/test_dump.sql	/^    data_guide_applicant_pe_student_behavior text,$/;"	F
+fountain_dump.data_guide_applicant_pe_student_behavior	assets/test_large.sql	/^,data_guide_applicant_pe_student_behavior TEXT$/;"	F
+fountain_dump.data_guide_applicant_pe_student_learning	assets/test_dump.sql	/^    data_guide_applicant_pe_student_learning text,$/;"	F
+fountain_dump.data_guide_applicant_pe_student_learning	assets/test_large.sql	/^,data_guide_applicant_pe_student_learning TEXT$/;"	F
+fountain_dump.data_guide_applicant_pe_student_management	assets/test_dump.sql	/^    data_guide_applicant_pe_student_management text,$/;"	F
+fountain_dump.data_guide_applicant_pe_student_management	assets/test_large.sql	/^,data_guide_applicant_pe_student_management TEXT$/;"	F
+fountain_dump.data_guide_applicant_pe_student_progress	assets/test_dump.sql	/^    data_guide_applicant_pe_student_progress text,$/;"	F
+fountain_dump.data_guide_applicant_pe_student_progress	assets/test_large.sql	/^,data_guide_applicant_pe_student_progress TEXT$/;"	F
+fountain_dump.data_guide_applicant_references_one	assets/test_dump.sql	/^    data_guide_applicant_references_one text,$/;"	F
+fountain_dump.data_guide_applicant_references_one	assets/test_large.sql	/^,data_guide_applicant_references_one TEXT$/;"	F
+fountain_dump.data_guide_applicant_references_two	assets/test_dump.sql	/^    data_guide_applicant_references_two text,$/;"	F
+fountain_dump.data_guide_applicant_references_two	assets/test_large.sql	/^,data_guide_applicant_references_two TEXT$/;"	F
+fountain_dump.data_guide_applicant_student_management	assets/test_dump.sql	/^    data_guide_applicant_student_management text,$/;"	F
+fountain_dump.data_guide_applicant_student_management	assets/test_large.sql	/^,data_guide_applicant_student_management TEXT$/;"	F
+fountain_dump.data_guide_applicant_student_recruitment	assets/test_dump.sql	/^    data_guide_applicant_student_recruitment text,$/;"	F
+fountain_dump.data_guide_applicant_student_recruitment	assets/test_large.sql	/^,data_guide_applicant_student_recruitment TEXT$/;"	F
+fountain_dump.data_guide_applicant_teaching_children	assets/test_dump.sql	/^    data_guide_applicant_teaching_children text,$/;"	F
+fountain_dump.data_guide_applicant_teaching_children	assets/test_large.sql	/^,data_guide_applicant_teaching_children TEXT$/;"	F
+fountain_dump.data_guide_applicant_virtual_site_inspection_url	assets/test_dump.sql	/^    data_guide_applicant_virtual_site_inspection_url text,$/;"	F
+fountain_dump.data_guide_applicant_virtual_site_inspection_url	assets/test_large.sql	/^,data_guide_applicant_virtual_site_inspection_url TEXT$/;"	F
+fountain_dump.data_microschool_zipcode	assets/test_dump.sql	/^    data_microschool_zipcode text,$/;"	F
+fountain_dump.data_microschool_zipcode	assets/test_large.sql	/^,data_microschool_zipcode TEXT$/;"	F
+fountain_dump.data_state	assets/test_dump.sql	/^    data_state text,$/;"	F
+fountain_dump.data_state	assets/test_large.sql	/^,data_state TEXT$/;"	F
+fountain_dump.data_utm_source	assets/test_dump.sql	/^    data_utm_source text,$/;"	F
+fountain_dump.data_utm_source	assets/test_large.sql	/^,data_utm_source TEXT$/;"	F
+fountain_dump.document_signatures	assets/test_dump.sql	/^    document_signatures text[],$/;"	F
+fountain_dump.document_signatures	assets/test_large.sql	/^,document_signatures TEXT[]$/;"	F
+fountain_dump.document_uploads	assets/test_dump.sql	/^    document_uploads text[],$/;"	F
+fountain_dump.document_uploads	assets/test_large.sql	/^,document_uploads TEXT[]$/;"	F
+fountain_dump.dumped_at	assets/test_dump.sql	/^    dumped_at timestamp without time zone DEFAULT now(),$/;"	F
+fountain_dump.dumped_at	assets/test_large.sql	/^,dumped_at TIMESTAMP DEFAULT NOW()$/;"	F
+fountain_dump.email	assets/test_dump.sql	/^    email text,$/;"	F
+fountain_dump.email	assets/test_large.sql	/^,email TEXT$/;"	F
+fountain_dump.file_upload_requests	assets/test_dump.sql	/^    file_upload_requests text[],$/;"	F
+fountain_dump.file_upload_requests	assets/test_large.sql	/^,file_upload_requests TEXT[]$/;"	F
+fountain_dump.first_name	assets/test_dump.sql	/^    first_name text,$/;"	F
+fountain_dump.first_name	assets/test_large.sql	/^,first_name TEXT$/;"	F
+fountain_dump.fountain_id	assets/test_dump.sql	/^    fountain_id text,$/;"	F
+fountain_dump.fountain_id	assets/test_large.sql	/^,fountain_id TEXT$/;"	F
+fountain_dump.funnel_custom_id	assets/test_dump.sql	/^    funnel_custom_id text,$/;"	F
+fountain_dump.funnel_custom_id	assets/test_large.sql	/^,funnel_custom_id TEXT$/;"	F
+fountain_dump.funnel_id	assets/test_dump.sql	/^    funnel_id text,$/;"	F
+fountain_dump.funnel_id	assets/test_large.sql	/^,funnel_id TEXT$/;"	F
+fountain_dump.funnel_location_id	assets/test_dump.sql	/^    funnel_location_id text,$/;"	F
+fountain_dump.funnel_location_id	assets/test_large.sql	/^,funnel_location_id TEXT$/;"	F
+fountain_dump.funnel_location_latitude	assets/test_dump.sql	/^    funnel_location_latitude real,$/;"	F
+fountain_dump.funnel_location_latitude	assets/test_large.sql	/^,funnel_location_latitude REAL$/;"	F
+fountain_dump.funnel_location_location_group_id	assets/test_dump.sql	/^    funnel_location_location_group_id text,$/;"	F
+fountain_dump.funnel_location_location_group_id	assets/test_large.sql	/^,funnel_location_location_group_id TEXT$/;"	F
+fountain_dump.funnel_location_location_group_name	assets/test_dump.sql	/^    funnel_location_location_group_name text,$/;"	F
+fountain_dump.funnel_location_location_group_name	assets/test_large.sql	/^,funnel_location_location_group_name TEXT$/;"	F
+fountain_dump.funnel_location_longitude	assets/test_dump.sql	/^    funnel_location_longitude real,$/;"	F
+fountain_dump.funnel_location_longitude	assets/test_large.sql	/^,funnel_location_longitude REAL$/;"	F
+fountain_dump.funnel_location_name	assets/test_dump.sql	/^    funnel_location_name text,$/;"	F
+fountain_dump.funnel_location_name	assets/test_large.sql	/^,funnel_location_name TEXT$/;"	F
+fountain_dump.funnel_title	assets/test_dump.sql	/^    funnel_title text,$/;"	F
+fountain_dump.funnel_title	assets/test_large.sql	/^,funnel_title TEXT$/;"	F
+fountain_dump.hub_guide_id	assets/test_dump.sql	/^    hub_guide_id text,$/;"	F
+fountain_dump.hub_guide_id	assets/test_large.sql	/^,hub_guide_id TEXT$/;"	F
+fountain_dump.hub_microschool_id	assets/test_dump.sql	/^    hub_microschool_id text,$/;"	F
+fountain_dump.hub_microschool_id	assets/test_large.sql	/^,hub_microschool_id TEXT$/;"	F
+fountain_dump.hub_microschool_term_id	assets/test_dump.sql	/^    hub_microschool_term_id text,$/;"	F
+fountain_dump.hub_microschool_term_id	assets/test_large.sql	/^,hub_microschool_term_id TEXT$/;"	F
+fountain_dump.hub_staffing_id	assets/test_dump.sql	/^    hub_staffing_id text,$/;"	F
+fountain_dump.hub_staffing_id	assets/test_large.sql	/^,hub_staffing_id TEXT$/;"	F
+fountain_dump.id	assets/test_dump.sql	/^    id integer NOT NULL,$/;"	F
+fountain_dump.id	assets/test_large.sql	/^(id SERIAL PRIMARY KEY$/;"	F
+fountain_dump.is_duplicate	assets/test_dump.sql	/^    is_duplicate boolean,$/;"	F
+fountain_dump.is_duplicate	assets/test_large.sql	/^,is_duplicate BOOLEAN$/;"	F
+fountain_dump.labels	assets/test_dump.sql	/^    labels text[],$/;"	F
+fountain_dump.labels	assets/test_large.sql	/^,labels TEXT[]$/;"	F
+fountain_dump.last_name	assets/test_dump.sql	/^    last_name text,$/;"	F
+fountain_dump.last_name	assets/test_large.sql	/^,last_name TEXT$/;"	F
+fountain_dump.last_transitioned_at	assets/test_dump.sql	/^    last_transitioned_at text,$/;"	F
+fountain_dump.last_transitioned_at	assets/test_large.sql	/^,last_transitioned_at TEXT$/;"	F
+fountain_dump.lessonly_course_results	assets/test_dump.sql	/^    lessonly_course_results text[],$/;"	F
+fountain_dump.lessonly_course_results	assets/test_large.sql	/^,lessonly_course_results TEXT[]$/;"	F
+fountain_dump.lessonly_lesson_results	assets/test_dump.sql	/^    lessonly_lesson_results text[],$/;"	F
+fountain_dump.lessonly_lesson_results	assets/test_large.sql	/^,lessonly_lesson_results TEXT[]$/;"	F
+fountain_dump.lessonly_path_results	assets/test_dump.sql	/^    lessonly_path_results text[],$/;"	F
+fountain_dump.lessonly_path_results	assets/test_large.sql	/^,lessonly_path_results TEXT[]$/;"	F
+fountain_dump.name	assets/test_dump.sql	/^    name text,$/;"	F
+fountain_dump.name	assets/test_large.sql	/^,name TEXT$/;"	F
+fountain_dump.normalized_phone_number	assets/test_dump.sql	/^    normalized_phone_number text,$/;"	F
+fountain_dump.normalized_phone_number	assets/test_large.sql	/^,normalized_phone_number TEXT$/;"	F
+fountain_dump.phone_number	assets/test_dump.sql	/^    phone_number text,$/;"	F
+fountain_dump.phone_number	assets/test_large.sql	/^,phone_number TEXT$/;"	F
+fountain_dump.pw_guide_id	assets/test_dump.sql	/^    pw_guide_id text,$/;"	F
+fountain_dump.pw_guide_id	assets/test_large.sql	/^,pw_guide_id TEXT$/;"	F
+fountain_dump.pw_microschool_id	assets/test_dump.sql	/^    pw_microschool_id text,$/;"	F
+fountain_dump.pw_microschool_id	assets/test_large.sql	/^,pw_microschool_id TEXT$/;"	F
+fountain_dump.pw_microschool_id_bad	assets/test_dump.sql	/^    pw_microschool_id_bad text,$/;"	F
+fountain_dump.pw_microschool_id_bad	assets/test_large.sql	/^,pw_microschool_id_bad TEXT$/;"	F
+fountain_dump.receive_automated_emails	assets/test_dump.sql	/^    receive_automated_emails boolean,$/;"	F
+fountain_dump.receive_automated_emails	assets/test_large.sql	/^,receive_automated_emails BOOLEAN$/;"	F
+fountain_dump.score_cards_results	assets/test_dump.sql	/^    score_cards_results text[]$/;"	F
+fountain_dump.score_cards_results	assets/test_large.sql	/^,score_cards_results TEXT[]);$/;"	F
+fountain_dump.stage_id	assets/test_dump.sql	/^    stage_id text,$/;"	F
+fountain_dump.stage_id	assets/test_large.sql	/^,stage_id TEXT$/;"	F
+fountain_dump.stage_parent_id	assets/test_dump.sql	/^    stage_parent_id text,$/;"	F
+fountain_dump.stage_parent_id	assets/test_large.sql	/^,stage_parent_id TEXT$/;"	F
+fountain_dump.stage_title	assets/test_dump.sql	/^    stage_title text,$/;"	F
+fountain_dump.stage_title	assets/test_large.sql	/^,stage_title TEXT$/;"	F
+fountain_dump.updated_at	assets/test_dump.sql	/^    updated_at text,$/;"	F
+fountain_dump.updated_at	assets/test_large.sql	/^,updated_at TEXT$/;"	F
+fountain_dump.zipcode	assets/test_dump.sql	/^    zipcode text,$/;"	F
+fountain_dump.zipcode	assets/test_large.sql	/^,zipcode TEXT$/;"	F
+fountain_dump.zoho_guide_id	assets/test_dump.sql	/^    zoho_guide_id text,$/;"	F
+fountain_dump.zoho_guide_id	assets/test_large.sql	/^,zoho_guide_id TEXT$/;"	F
+fountain_dump.zoho_guide_microschool_id	assets/test_dump.sql	/^    zoho_guide_microschool_id text,$/;"	F
+fountain_dump.zoho_guide_microschool_id	assets/test_large.sql	/^,zoho_guide_microschool_id TEXT$/;"	F
+fountain_dump.zoho_microschool_id	assets/test_dump.sql	/^    zoho_microschool_id text,$/;"	F
+fountain_dump.zoho_microschool_id	assets/test_large.sql	/^,zoho_microschool_id TEXT$/;"	F
+funding_source_enrollments	assets/test_dump.sql	/^CREATE TABLE public.funding_source_enrollments ($/;"	t
+funding_source_enrollments	assets/test_large.sql	/^CREATE TABLE funding_source_enrollments ($/;"	t
+funding_source_enrollments.EXCLUDE	assets/test_large.sql	/^  EXCLUDE USING GIST (student_id WITH =, during WITH &&) -- no overlapping enrollments$/;"	F
+funding_source_enrollments.during	assets/test_dump.sql	/^    during daterange NOT NULL,$/;"	F
+funding_source_enrollments.during	assets/test_large.sql	/^  during DATERANGE NOT NULL,$/;"	F
+funding_source_enrollments.funding_source	assets/test_large.sql	/^  funding_source FUNDING_SOURCE NOT NULL,$/;"	F
+funding_source_enrollments.funding_source_id	assets/test_dump.sql	/^    funding_source_id uuid,$/;"	F
+funding_source_enrollments.id	assets/test_dump.sql	/^    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,$/;"	F
+funding_source_enrollments.id	assets/test_large.sql	/^  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),$/;"	F
+funding_source_enrollments.registration_id	assets/test_dump.sql	/^    registration_id uuid NOT NULL$/;"	F
+funding_source_enrollments.student_id	assets/test_dump.sql	/^    student_id uuid NOT NULL,$/;"	F
+funding_source_enrollments.student_id	assets/test_large.sql	/^  student_id UUID NOT NULL,$/;"	F
+funding_source_registrations	assets/test_dump.sql	/^CREATE TABLE public.funding_source_registrations ($/;"	t
+funding_source_registrations	assets/test_large.sql	/^CREATE TABLE funding_source_registrations ($/;"	t
+funding_source_registrations.funding_source	assets/test_large.sql	/^  funding_source FUNDING_SOURCE NOT NULL,$/;"	F
+funding_source_registrations.funding_source_id	assets/test_dump.sql	/^    funding_source_id uuid NOT NULL$/;"	F
+funding_source_registrations.funding_source_student_id	assets/test_dump.sql	/^    funding_source_student_id integer,$/;"	F
+funding_source_registrations.funding_source_student_id	assets/test_large.sql	/^  funding_source_student_id INTEGER,$/;"	F
+funding_source_registrations.funding_source_student_number	assets/test_dump.sql	/^    funding_source_student_number integer,$/;"	F
+funding_source_registrations.funding_source_student_number	assets/test_large.sql	/^  funding_source_student_number INTEGER,$/;"	F
+funding_source_registrations.id	assets/test_dump.sql	/^    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,$/;"	F
+funding_source_registrations.id	assets/test_large.sql	/^  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),$/;"	F
+funding_source_registrations.student_id	assets/test_dump.sql	/^    student_id uuid NOT NULL,$/;"	F
+funding_source_registrations.student_id	assets/test_large.sql	/^  student_id UUID NOT NULL REFERENCES students (id),$/;"	F
+funding_sources	assets/test_dump.sql	/^CREATE TABLE public.funding_sources ($/;"	t
+funding_sources.account_number	assets/test_dump.sql	/^    account_number text,$/;"	F
+funding_sources.id	assets/test_dump.sql	/^    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,$/;"	F
+funding_sources.name	assets/test_dump.sql	/^    name text NOT NULL,$/;"	F
+funding_sources.student_cap	assets/test_dump.sql	/^    student_cap integer$/;"	F
+generateText	mocker/fake.go	/^func generateText(column string, isNotNull bool) string {$/;"	f
+getRandomEnumValue	mocker/mock.go	/^func getRandomEnumValue(enums []nodes.CreateEnumStmt, indexOfEnum int) interface{} {$/;"	f
+getRandomForeignRefValue	mocker/mock.go	/^func getRandomForeignRefValue(db *pgxpool.Pool, foreigntable, foreigncolumn string) interface{} {$/;"	f
+globals	assets/test_dump.sql	/^CREATE TABLE public.globals ($/;"	t
+globals	assets/test_large.sql	/^CREATE TABLE globals ($/;"	t
+globals.document	assets/test_dump.sql	/^    document jsonb$/;"	F
+globals.document	assets/test_large.sql	/^  document JSONB$/;"	F
+globals.key	assets/test_dump.sql	/^    key text NOT NULL,$/;"	F
+globals.key	assets/test_large.sql	/^  key TEXT PRIMARY KEY,$/;"	F
+grade_enrollments	assets/test_dump.sql	/^CREATE TABLE public.grade_enrollments ($/;"	t
+grade_enrollments	assets/test_large.sql	/^CREATE TABLE grade_enrollments ($/;"	t
+grade_enrollments.EXCLUDE	assets/test_large.sql	/^  EXCLUDE USING GIST (student_id WITH =, during WITH &&)$/;"	F
+grade_enrollments.during	assets/test_dump.sql	/^    during daterange NOT NULL,$/;"	F
+grade_enrollments.during	assets/test_large.sql	/^  during DATERANGE NOT NULL,$/;"	F
+grade_enrollments.grade_years_id	assets/test_dump.sql	/^    grade_years_id uuid NOT NULL,$/;"	F
+grade_enrollments.grade_years_id	assets/test_large.sql	/^  grade_years_id UUID NOT NULL REFERENCES grade_years (id),$/;"	F
+grade_enrollments.id	assets/test_dump.sql	/^    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,$/;"	F
+grade_enrollments.id	assets/test_large.sql	/^  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),$/;"	F
+grade_enrollments.student_id	assets/test_dump.sql	/^    student_id uuid NOT NULL,$/;"	F
+grade_enrollments.student_id	assets/test_large.sql	/^  student_id UUID NOT NULL REFERENCES students (id),$/;"	F
+grade_years	assets/test_dump.sql	/^CREATE TABLE public.grade_years ($/;"	t
+grade_years	assets/test_large.sql	/^CREATE TABLE grade_years ($/;"	t
+grade_years.authorized_minutes_per_year	assets/test_dump.sql	/^    authorized_minutes_per_year integer NOT NULL$/;"	F
+grade_years.authorized_minutes_per_year	assets/test_large.sql	/^  authorized_minutes_per_year INTEGER NOT NULL,$/;"	F
+grade_years.grade_level	assets/test_dump.sql	/^    grade_level public.grade_level NOT NULL,$/;"	F
+grade_years.grade_level	assets/test_large.sql	/^  grade_level grade_level NOT NULL,$/;"	F
+grade_years.id	assets/test_dump.sql	/^    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,$/;"	F
+grade_years.id	assets/test_large.sql	/^  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),$/;"	F
+grade_years.school_year	assets/test_dump.sql	/^    school_year public.school_year NOT NULL,$/;"	F
+grade_years.school_year	assets/test_large.sql	/^  school_year school_year NOT NULL,$/;"	F
+grade_years.state	assets/test_dump.sql	/^    state uuid,$/;"	F
+grade_years.state	assets/test_large.sql	/^  state UUID REFERENCES states (id),$/;"	F
+guide_mentors	assets/test_dump.sql	/^CREATE TABLE public.guide_mentors ($/;"	t
+guide_mentors	assets/test_large.sql	/^CREATE TABLE guide_mentors ($/;"	t
+guide_mentors.guide_id	assets/test_dump.sql	/^    guide_id uuid NOT NULL,$/;"	F
+guide_mentors.guide_id	assets/test_large.sql	/^  guide_id UUID NOT NULL REFERENCES adults (id),$/;"	F
+guide_mentors.id	assets/test_dump.sql	/^    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,$/;"	F
+guide_mentors.id	assets/test_large.sql	/^  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),$/;"	F
+guide_mentors.mentor_id	assets/test_dump.sql	/^    mentor_id uuid NOT NULL$/;"	F
+guide_mentors.mentor_id	assets/test_large.sql	/^  mentor_id UUID NOT NULL REFERENCES adults (id),$/;"	F
+logg	logg/logg.go	/^package logg$/;"	p
+main	logg/logg.go	/^func main() {$/;"	f
+main	main.go	/^func main() {$/;"	f
+main	main.go	/^package main$/;"	p
+microschool_enrollments	assets/test_dump.sql	/^CREATE TABLE public.microschool_enrollments ($/;"	t
+microschool_enrollments	assets/test_large.sql	/^CREATE TABLE microschool_enrollments ($/;"	t
+microschool_enrollments.EXCLUDE	assets/test_large.sql	/^  EXCLUDE USING GIST (student_id WITH =, during WITH &&)$/;"	F
+microschool_enrollments.authorized_minutes	assets/test_dump.sql	/^    authorized_minutes integer,$/;"	F
+microschool_enrollments.authorized_minutes	assets/test_large.sql	/^  authorized_minutes INTEGER,$/;"	F
+microschool_enrollments.cents_per_minute	assets/test_dump.sql	/^    cents_per_minute integer,$/;"	F
+microschool_enrollments.cents_per_minute	assets/test_large.sql	/^  cents_per_minute INTEGER CHECK (cents_per_minute > 0),$/;"	F
+microschool_enrollments.during	assets/test_dump.sql	/^    during daterange NOT NULL,$/;"	F
+microschool_enrollments.during	assets/test_large.sql	/^  during DATERANGE NOT NULL,$/;"	F
+microschool_enrollments.id	assets/test_dump.sql	/^    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,$/;"	F
+microschool_enrollments.id	assets/test_large.sql	/^  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),$/;"	F
+microschool_enrollments.microschool_term_id	assets/test_dump.sql	/^    microschool_term_id uuid NOT NULL,$/;"	F
+microschool_enrollments.microschool_term_id	assets/test_large.sql	/^  microschool_term_id UUID NOT NULL REFERENCES microschool_terms (id),$/;"	F
+microschool_enrollments.student_id	assets/test_dump.sql	/^    student_id uuid NOT NULL,$/;"	F
+microschool_enrollments.student_id	assets/test_large.sql	/^  student_id UUID NOT NULL REFERENCES students (id),$/;"	F
+microschool_terms	assets/test_dump.sql	/^CREATE TABLE public.microschool_terms ($/;"	t
+microschool_terms	assets/test_large.sql	/^CREATE TABLE microschool_terms ($/;"	t
+microschool_terms.EXCLUDE	assets/test_large.sql	/^  EXCLUDE USING GIST (microschool_id WITH =, during WITH &&)$/;"	F
+microschool_terms.accepting_students	assets/test_dump.sql	/^    accepting_students boolean,$/;"	F
+microschool_terms.accepting_students	assets/test_large.sql	/^  accepting_students BOOLEAN,$/;"	F
+microschool_terms.accepting_students_aug_2020	assets/test_dump.sql	/^    accepting_students_aug_2020 boolean,$/;"	F
+microschool_terms.accepting_students_aug_2020	assets/test_large.sql	/^  accepting_students_aug_2020 BOOLEAN,$/;"	F
+microschool_terms.capacity	assets/test_dump.sql	/^    capacity integer,$/;"	F
+microschool_terms.capacity	assets/test_large.sql	/^  capacity INTEGER,$/;"	F
+microschool_terms.during	assets/test_dump.sql	/^    during daterange NOT NULL,$/;"	F
+microschool_terms.during	assets/test_large.sql	/^  during DATERANGE NOT NULL,$/;"	F
+microschool_terms.id	assets/test_dump.sql	/^    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,$/;"	F
+microschool_terms.id	assets/test_large.sql	/^  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),$/;"	F
+microschool_terms.max_grade	assets/test_dump.sql	/^    max_grade public.grade_level,$/;"	F
+microschool_terms.max_grade	assets/test_large.sql	/^  max_grade grade_level,$/;"	F
+microschool_terms.microschool_id	assets/test_dump.sql	/^    microschool_id uuid,$/;"	F
+microschool_terms.microschool_id	assets/test_large.sql	/^  microschool_id UUID REFERENCES microschools (id),$/;"	F
+microschool_terms.min_grade	assets/test_dump.sql	/^    min_grade public.grade_level,$/;"	F
+microschool_terms.min_grade	assets/test_large.sql	/^  min_grade grade_level,$/;"	F
+microschool_terms.publicly_visible	assets/test_dump.sql	/^    publicly_visible boolean$/;"	F
+microschool_terms.publicly_visible	assets/test_large.sql	/^  publicly_visible BOOLEAN,$/;"	F
+microschools	assets/test_dump.sql	/^CREATE TABLE public.microschools ($/;"	t
+microschools	assets/test_large.sql	/^CREATE TABLE microschools ($/;"	t
+microschools.address_1	assets/test_dump.sql	/^    address_1 text,$/;"	F
+microschools.address_1	assets/test_large.sql	/^  address_1 TEXT,$/;"	F
+microschools.address_2	assets/test_dump.sql	/^    address_2 text,$/;"	F
+microschools.address_2	assets/test_large.sql	/^  address_2 TEXT,$/;"	F
+microschools.airtable_id	assets/test_dump.sql	/^    airtable_id text,$/;"	F
+microschools.airtable_id	assets/test_large.sql	/^  airtable_id TEXT UNIQUE,$/;"	F
+microschools.city	assets/test_dump.sql	/^    city text,$/;"	F
+microschools.city	assets/test_large.sql	/^  city TEXT,$/;"	F
+microschools.club_id	assets/test_dump.sql	/^    club_id text$/;"	F
+microschools.id	assets/test_dump.sql	/^    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,$/;"	F
+microschools.id	assets/test_large.sql	/^  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),$/;"	F
+microschools.mailing_address_1	assets/test_dump.sql	/^    mailing_address_1 text,$/;"	F
+microschools.mailing_address_1	assets/test_large.sql	/^  mailing_address_1 TEXT,$/;"	F
+microschools.mailing_address_2	assets/test_dump.sql	/^    mailing_address_2 text,$/;"	F
+microschools.mailing_address_2	assets/test_large.sql	/^  mailing_address_2 TEXT,$/;"	F
+microschools.mailing_city	assets/test_dump.sql	/^    mailing_city text,$/;"	F
+microschools.mailing_city	assets/test_large.sql	/^  mailing_city TEXT,$/;"	F
+microschools.mailing_state	assets/test_dump.sql	/^    mailing_state uuid,$/;"	F
+microschools.mailing_state	assets/test_large.sql	/^  mailing_state UUID REFERENCES states (id),$/;"	F
+microschools.mailing_zip4	assets/test_dump.sql	/^    mailing_zip4 text,$/;"	F
+microschools.mailing_zip4	assets/test_large.sql	/^  mailing_zip4 TEXT,$/;"	F
+microschools.mailing_zip5	assets/test_dump.sql	/^    mailing_zip5 text,$/;"	F
+microschools.mailing_zip5	assets/test_large.sql	/^  mailing_zip5 TEXT,$/;"	F
+microschools.name	assets/test_dump.sql	/^    name text NOT NULL,$/;"	F
+microschools.name	assets/test_large.sql	/^  name TEXT NOT NULL UNIQUE,$/;"	F
+microschools.phone	assets/test_dump.sql	/^    phone text,$/;"	F
+microschools.phone	assets/test_large.sql	/^  phone TEXT,$/;"	F
+microschools.pw_id	assets/test_dump.sql	/^    pw_id text,$/;"	F
+microschools.pw_id	assets/test_large.sql	/^  pw_id TEXT UNIQUE,$/;"	F
+microschools.state	assets/test_dump.sql	/^    state uuid,$/;"	F
+microschools.state	assets/test_large.sql	/^  state UUID REFERENCES states (id),$/;"	F
+microschools.status	assets/test_dump.sql	/^    status text,$/;"	F
+microschools.status	assets/test_large.sql	/^  status TEXT$/;"	F
+microschools.zip4	assets/test_dump.sql	/^    zip4 text,$/;"	F
+microschools.zip4	assets/test_large.sql	/^  zip4 TEXT,$/;"	F
+microschools.zip5	assets/test_dump.sql	/^    zip5 text,$/;"	F
+microschools.zip5	assets/test_large.sql	/^  zip5 TEXT,$/;"	F
+microschools.zoho_id	assets/test_dump.sql	/^    zoho_id text,$/;"	F
+microschools.zoho_id	assets/test_large.sql	/^  zoho_id TEXT UNIQUE,$/;"	F
+migrations	assets/test_dump.sql	/^CREATE TABLE public.migrations ($/;"	t
+migrations.time	assets/test_dump.sql	/^    "time" timestamp without time zone$/;"	F
+migrations.version	assets/test_dump.sql	/^    version integer,$/;"	F
+mocker	mocker/config.go	/^package mocker$/;"	p
+mocker	mocker/fake.go	/^package mocker$/;"	p
+mocker	mocker/mock.go	/^package mocker$/;"	p
+mocker	mocker/parse.go	/^package mocker$/;"	p
+mocker	mocker/util.go	/^package mocker$/;"	p
+mocker	mocker/work.go	/^package mocker$/;"	p
+passesConstraints	mocker/mock.go	/^func passesConstraints(widget interface{}, constraints []nodes.Constraint) bool {$/;"	f
+prendaworld_attendance_dump	assets/test_dump.sql	/^CREATE TABLE public.prendaworld_attendance_dump ($/;"	t
+prendaworld_attendance_dump	assets/test_large.sql	/^CREATE TABLE prendaworld_attendance_dump($/;"	t
+prendaworld_attendance_dump.Grade	assets/test_dump.sql	/^    "Grade" text,$/;"	F
+prendaworld_attendance_dump.Grade	assets/test_large.sql	/^  "Grade" TEXT,$/;"	F
+prendaworld_attendance_dump.PrendaWorldID	assets/test_dump.sql	/^    "PrendaWorldID" text,$/;"	F
+prendaworld_attendance_dump.PrendaWorldID	assets/test_large.sql	/^  "PrendaWorldID" TEXT,$/;"	F
+prendaworld_attendance_dump.SequoiaID	assets/test_dump.sql	/^    "SequoiaID" text,$/;"	F
+prendaworld_attendance_dump.SequoiaID	assets/test_large.sql	/^  "SequoiaID" TEXT,$/;"	F
+prendaworld_attendance_dump.Student	assets/test_dump.sql	/^    "Student" text,$/;"	F
+prendaworld_attendance_dump.Student	assets/test_large.sql	/^  "Student" TEXT,$/;"	F
+prendaworld_attendance_dump.Type	assets/test_dump.sql	/^    "Type" text,$/;"	F
+prendaworld_attendance_dump.Type	assets/test_large.sql	/^  "Type" TEXT,$/;"	F
+prendaworld_attendance_dump.date	assets/test_dump.sql	/^    date date,$/;"	F
+prendaworld_attendance_dump.date	assets/test_large.sql	/^  "date" DATE,$/;"	F
+prendaworld_attendance_dump.minutes	assets/test_dump.sql	/^    minutes integer$/;"	F
+prendaworld_attendance_dump.minutes	assets/test_large.sql	/^  "minutes" INTEGER$/;"	F
+prendaworld_attendance_dump.partner	assets/test_dump.sql	/^    partner text,$/;"	F
+prendaworld_attendance_dump.partner	assets/test_large.sql	/^  "partner" TEXT,$/;"	F
+prendaworld_attendance_dump.year_month	assets/test_dump.sql	/^    year_month text,$/;"	F
+prendaworld_attendance_dump.year_month	assets/test_large.sql	/^  "year_month" TEXT,$/;"	F
+prep	mocker/config.go	/^func (m *Mocker) prep() error {$/;"	f
+private_funding_sources	assets/test_dump.sql	/^CREATE TABLE public.private_funding_sources ($/;"	t
+private_funding_sources.adult_id	assets/test_dump.sql	/^    adult_id uuid$/;"	F
+private_funding_sources.customer_id	assets/test_dump.sql	/^    customer_id text,$/;"	F
+private_funding_sources.status	assets/test_dump.sql	/^    status text,$/;"	F
+private_funding_sources.subscription_id	assets/test_dump.sql	/^    subscription_id text,$/;"	F
+pw_enrollments	assets/test_dump.sql	/^CREATE TABLE public.pw_enrollments ($/;"	t
+pw_enrollments	assets/test_large.sql	/^CREATE TABLE pw_enrollments ($/;"	t
+pw_enrollments.EXCLUDE	assets/test_large.sql	/^  EXCLUDE USING GIST (pw_student_id WITH =, during WITH &&)$/;"	F
+pw_enrollments.authorized_minutes	assets/test_dump.sql	/^    authorized_minutes integer,$/;"	F
+pw_enrollments.authorized_minutes	assets/test_large.sql	/^  authorized_minutes INTEGER,$/;"	F
+pw_enrollments.cents_per_minute	assets/test_dump.sql	/^    cents_per_minute integer,$/;"	F
+pw_enrollments.cents_per_minute	assets/test_large.sql	/^  cents_per_minute INTEGER,$/;"	F
+pw_enrollments.during	assets/test_dump.sql	/^    during daterange NOT NULL$/;"	F
+pw_enrollments.during	assets/test_large.sql	/^  during DATERANGE NOT NULL,$/;"	F
+pw_enrollments.id	assets/test_dump.sql	/^    id integer NOT NULL,$/;"	F
+pw_enrollments.id	assets/test_large.sql	/^  id SERIAL PRIMARY KEY,$/;"	F
+pw_enrollments.pw_microschool_id	assets/test_dump.sql	/^    pw_microschool_id integer NOT NULL,$/;"	F
+pw_enrollments.pw_microschool_id	assets/test_large.sql	/^  pw_microschool_id INTEGER NOT NULL,$/;"	F
+pw_enrollments.pw_student_id	assets/test_dump.sql	/^    pw_student_id integer NOT NULL,$/;"	F
+pw_enrollments.pw_student_id	assets/test_large.sql	/^  pw_student_id INTEGER NOT NULL,$/;"	F
+pw_enrollments_dump	assets/test_dump.sql	/^CREATE TABLE public.pw_enrollments_dump ($/;"	t
+pw_enrollments_dump	assets/test_large.sql	/^CREATE TABLE pw_enrollments_dump ($/;"	t
+pw_enrollments_dump.End Date	assets/test_dump.sql	/^    "End Date" date,$/;"	F
+pw_enrollments_dump.End Date	assets/test_large.sql	/^  "End Date" DATE,$/;"	F
+pw_enrollments_dump.Funding Source	assets/test_dump.sql	/^    "Funding Source" text$/;"	F
+pw_enrollments_dump.Hours	assets/test_dump.sql	/^    "Hours" text,$/;"	F
+pw_enrollments_dump.Hours	assets/test_large.sql	/^  "Hours" TEXT$/;"	F
+pw_enrollments_dump.School ID	assets/test_dump.sql	/^    "School ID" text,$/;"	F
+pw_enrollments_dump.School ID	assets/test_large.sql	/^  "School ID" TEXT,$/;"	F
+pw_enrollments_dump.Start Date	assets/test_dump.sql	/^    "Start Date" date,$/;"	F
+pw_enrollments_dump.Start Date	assets/test_large.sql	/^  "Start Date" DATE,$/;"	F
+pw_enrollments_dump.StudentID	assets/test_dump.sql	/^    "StudentID" text,$/;"	F
+pw_enrollments_dump.StudentID	assets/test_large.sql	/^  "StudentID" TEXT,$/;"	F
+pw_enrollments_dump.id	assets/test_dump.sql	/^    id integer NOT NULL,$/;"	F
+pw_enrollments_dump.id	assets/test_large.sql	/^  id SERIAL PRIMARY KEY,$/;"	F
+pw_exceptions	assets/test_dump.sql	/^CREATE TABLE public.pw_exceptions ($/;"	t
+pw_exceptions	assets/test_large.sql	/^CREATE TABLE pw_exceptions ($/;"	t
+pw_exceptions.data	assets/test_dump.sql	/^    data json NOT NULL$/;"	F
+pw_exceptions.data	assets/test_large.sql	/^  data JSON NOT NULL$/;"	F
+pw_exceptions.id	assets/test_dump.sql	/^    id integer NOT NULL,$/;"	F
+pw_exceptions.id	assets/test_large.sql	/^  id SERIAL PRIMARY KEY,$/;"	F
+pw_exceptions.insert_report	assets/test_dump.sql	/^    insert_report text NOT NULL,$/;"	F
+pw_exceptions.insert_report	assets/test_large.sql	/^  insert_report text NOT NULL,$/;"	F
+pw_guides_dump	assets/test_dump.sql	/^CREATE TABLE public.pw_guides_dump ($/;"	t
+pw_guides_dump	assets/test_large.sql	/^CREATE TABLE pw_guides_dump ($/;"	t
+pw_guides_dump.Email	assets/test_dump.sql	/^    "Email" text,$/;"	F
+pw_guides_dump.Email	assets/test_large.sql	/^  "Email" TEXT,$/;"	F
+pw_guides_dump.First Name	assets/test_dump.sql	/^    "First Name" text,$/;"	F
+pw_guides_dump.First Name	assets/test_large.sql	/^  "First Name" TEXT,$/;"	F
+pw_guides_dump.Last Name	assets/test_dump.sql	/^    "Last Name" text,$/;"	F
+pw_guides_dump.Last Name	assets/test_large.sql	/^  "Last Name" TEXT,$/;"	F
+pw_guides_dump.Prenda ID	assets/test_dump.sql	/^    "Prenda ID" text,$/;"	F
+pw_guides_dump.Prenda ID	assets/test_large.sql	/^  "Prenda ID" TEXT,$/;"	F
+pw_guides_dump.School IDs	assets/test_dump.sql	/^    "School IDs" text$/;"	F
+pw_guides_dump.School IDs	assets/test_large.sql	/^  "School IDs" TEXT$/;"	F
+pw_guides_dump.id	assets/test_dump.sql	/^    id integer NOT NULL,$/;"	F
+pw_guides_dump.id	assets/test_large.sql	/^  id SERIAL PRIMARY KEY,$/;"	F
+pw_microschools_dump	assets/test_dump.sql	/^CREATE TABLE public.pw_microschools_dump ($/;"	t
+pw_microschools_dump	assets/test_large.sql	/^CREATE TABLE pw_microschools_dump ($/;"	t
+pw_microschools_dump.1st	assets/test_dump.sql	/^    "1st" text,$/;"	F
+pw_microschools_dump.1st	assets/test_large.sql	/^  "1st" TEXT,$/;"	F
+pw_microschools_dump.2nd	assets/test_dump.sql	/^    "2nd" text,$/;"	F
+pw_microschools_dump.2nd	assets/test_large.sql	/^  "2nd" TEXT,$/;"	F
+pw_microschools_dump.3rd	assets/test_dump.sql	/^    "3rd" text,$/;"	F
+pw_microschools_dump.3rd	assets/test_large.sql	/^  "3rd" TEXT,$/;"	F
+pw_microschools_dump.4th	assets/test_dump.sql	/^    "4th" text,$/;"	F
+pw_microschools_dump.4th	assets/test_large.sql	/^  "4th" TEXT,$/;"	F
+pw_microschools_dump.5th	assets/test_dump.sql	/^    "5th" text,$/;"	F
+pw_microschools_dump.5th	assets/test_large.sql	/^  "5th" TEXT,$/;"	F
+pw_microschools_dump.6th	assets/test_dump.sql	/^    "6th" text,$/;"	F
+pw_microschools_dump.6th	assets/test_large.sql	/^  "6th" TEXT,$/;"	F
+pw_microschools_dump.7th	assets/test_dump.sql	/^    "7th" text,$/;"	F
+pw_microschools_dump.7th	assets/test_large.sql	/^  "7th" TEXT,$/;"	F
+pw_microschools_dump.8th	assets/test_dump.sql	/^    "8th" text,$/;"	F
+pw_microschools_dump.8th	assets/test_large.sql	/^  "8th" TEXT,$/;"	F
+pw_microschools_dump.Active	assets/test_dump.sql	/^    "Active" text,$/;"	F
+pw_microschools_dump.Active	assets/test_large.sql	/^  "Active" TEXT,$/;"	F
+pw_microschools_dump.Date Created	assets/test_dump.sql	/^    "Date Created" text,$/;"	F
+pw_microschools_dump.Date Created	assets/test_large.sql	/^  "Date Created" TEXT,$/;"	F
+pw_microschools_dump.ID	assets/test_dump.sql	/^    "ID" text,$/;"	F
+pw_microschools_dump.ID	assets/test_large.sql	/^  "ID" TEXT,$/;"	F
+pw_microschools_dump.Kindergarten	assets/test_dump.sql	/^    "Kindergarten" text,$/;"	F
+pw_microschools_dump.Kindergarten	assets/test_large.sql	/^  "Kindergarten" TEXT,$/;"	F
+pw_microschools_dump.Mongo _id	assets/test_dump.sql	/^    "Mongo _id" text$/;"	F
+pw_microschools_dump.Name	assets/test_dump.sql	/^    "Name" text,$/;"	F
+pw_microschools_dump.Name	assets/test_large.sql	/^  "Name" TEXT,$/;"	F
+pw_microschools_dump.Nickname	assets/test_dump.sql	/^    "Nickname" text,$/;"	F
+pw_microschools_dump.Nickname	assets/test_large.sql	/^  "Nickname" TEXT,$/;"	F
+pw_microschools_dump.Other	assets/test_dump.sql	/^    "Other" text,$/;"	F
+pw_microschools_dump.Other	assets/test_large.sql	/^  "Other" TEXT$/;"	F
+pw_microschools_dump.Test Students	assets/test_dump.sql	/^    "Test Students" text,$/;"	F
+pw_microschools_dump.Test Students	assets/test_large.sql	/^  "Test Students" TEXT,$/;"	F
+pw_microschools_dump.Type	assets/test_dump.sql	/^    "Type" text,$/;"	F
+pw_microschools_dump.Type	assets/test_large.sql	/^  "Type" TEXT,$/;"	F
+pw_microschools_dump.id	assets/test_dump.sql	/^    id integer NOT NULL,$/;"	F
+pw_microschools_dump.id	assets/test_large.sql	/^  id SERIAL PRIMARY KEY,$/;"	F
+pw_students_dump	assets/test_dump.sql	/^CREATE TABLE public.pw_students_dump ($/;"	t
+pw_students_dump	assets/test_large.sql	/^CREATE TABLE pw_students_dump ($/;"	t
+pw_students_dump.Enrolled Grade	assets/test_dump.sql	/^    "Enrolled Grade" text,$/;"	F
+pw_students_dump.Enrolled Grade	assets/test_large.sql	/^  "Enrolled Grade" TEXT,$/;"	F
+pw_students_dump.First Name	assets/test_dump.sql	/^    "First Name" text,$/;"	F
+pw_students_dump.First Name	assets/test_large.sql	/^  "First Name" TEXT,$/;"	F
+pw_students_dump.Last Name	assets/test_dump.sql	/^    "Last Name" text,$/;"	F
+pw_students_dump.Last Name	assets/test_large.sql	/^  "Last Name" TEXT,$/;"	F
+pw_students_dump.Prenda ID	assets/test_dump.sql	/^    "Prenda ID" text,$/;"	F
+pw_students_dump.Prenda ID	assets/test_large.sql	/^  "Prenda ID" TEXT,$/;"	F
+pw_students_dump.School ID	assets/test_dump.sql	/^    "School ID" text,$/;"	F
+pw_students_dump.School ID	assets/test_large.sql	/^  "School ID" TEXT,$/;"	F
+pw_students_dump.School Name	assets/test_dump.sql	/^    "School Name" text,$/;"	F
+pw_students_dump.School Name	assets/test_large.sql	/^  "School Name" TEXT,$/;"	F
+pw_students_dump.Sequoia ID	assets/test_dump.sql	/^    "Sequoia ID" text,$/;"	F
+pw_students_dump.Sequoia ID	assets/test_large.sql	/^  "Sequoia ID" TEXT,$/;"	F
+pw_students_dump.Test Account	assets/test_dump.sql	/^    "Test Account" text$/;"	F
+pw_students_dump.Test Account	assets/test_large.sql	/^  "Test Account" TEXT$/;"	F
+pw_students_dump.id	assets/test_dump.sql	/^    id integer NOT NULL,$/;"	F
+pw_students_dump.id	assets/test_large.sql	/^  id SERIAL PRIMARY KEY,$/;"	F
+pw_subscriptions_dump	assets/test_dump.sql	/^CREATE TABLE public.pw_subscriptions_dump ($/;"	t
+pw_subscriptions_dump.Adult Id	assets/test_dump.sql	/^    "Adult Id" text,$/;"	F
+pw_subscriptions_dump.Customer Stripe Id	assets/test_dump.sql	/^    "Customer Stripe Id" text,$/;"	F
+pw_subscriptions_dump.Expiration	assets/test_dump.sql	/^    "Expiration" date,$/;"	F
+pw_subscriptions_dump.Last Paid Date	assets/test_dump.sql	/^    "Last Paid Date" date,$/;"	F
+pw_subscriptions_dump.Mongo _id	assets/test_dump.sql	/^    "Mongo _id" text,$/;"	F
+pw_subscriptions_dump.Paid Amount	assets/test_dump.sql	/^    "Paid Amount" integer,$/;"	F
+pw_subscriptions_dump.School Id	assets/test_dump.sql	/^    "School Id" text,$/;"	F
+pw_subscriptions_dump.School Type	assets/test_dump.sql	/^    "School Type" text$/;"	F
+pw_subscriptions_dump.Subscription Status	assets/test_dump.sql	/^    "Subscription Status" text,$/;"	F
+record	mocker/mock.go	/^type record map[string]interface{}$/;"	t
+relationships	assets/test_dump.sql	/^CREATE TABLE public.relationships ($/;"	t
+relationships	assets/test_large.sql	/^CREATE TABLE relationships ($/;"	t
+relationships.guardian_id	assets/test_dump.sql	/^    guardian_id uuid NOT NULL,$/;"	F
+relationships.guardian_id	assets/test_large.sql	/^  guardian_id UUID NOT NULL REFERENCES adults (id),$/;"	F
+relationships.id	assets/test_dump.sql	/^    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,$/;"	F
+relationships.id	assets/test_large.sql	/^  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),$/;"	F
+relationships.notes	assets/test_dump.sql	/^    notes text NOT NULL$/;"	F
+relationships.notes	assets/test_large.sql	/^  notes TEXT NOT NULL$/;"	F
+relationships.student_id	assets/test_dump.sql	/^    student_id uuid NOT NULL,$/;"	F
+relationships.student_id	assets/test_large.sql	/^  student_id UUID NOT NULL REFERENCES students (id),$/;"	F
+session	assets/test_dump.sql	/^CREATE TABLE public.session ($/;"	t
+session	assets/test_large.sql	/^);ALTER TABLE applications ADD COLUMN files JSONB;CREATE TABLE "session" ($/;"	t
+session.IDX_session_expire	assets/test_dump.sql	/^CREATE INDEX "IDX_session_expire" ON public.session USING btree (expire);$/;"	i
+session.IDX_session_expire	assets/test_large.sql	/^CREATE INDEX"IDX_session_expire" ON "session" ("expire");$/;"	i
+session.expire	assets/test_dump.sql	/^    expire timestamp(6) without time zone NOT NULL$/;"	F
+session.expire	assets/test_large.sql	/^	"expire" timestamp(6) NOT NULL$/;"	F
+session.sess	assets/test_dump.sql	/^    sess json NOT NULL,$/;"	F
+session.sess	assets/test_large.sql	/^	"sess" json NOT NULL,$/;"	F
+session.sid	assets/test_dump.sql	/^    sid character varying NOT NULL,$/;"	F
+session.sid	assets/test_large.sql	/^  "sid" varchar NOT NULL COLLATE "default" PRIMARY KEY NOT DEFERRABLE INITIALLY IMMEDIATE,$/;"	F
+staffing	assets/test_dump.sql	/^CREATE TABLE public.staffing ($/;"	t
+staffing	assets/test_large.sql	/^CREATE TABLE staffing ($/;"	t
+staffing.guide_id	assets/test_dump.sql	/^    guide_id uuid NOT NULL,$/;"	F
+staffing.guide_id	assets/test_large.sql	/^  guide_id UUID NOT NULL REFERENCES adults (id),$/;"	F
+staffing.id	assets/test_dump.sql	/^    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,$/;"	F
+staffing.id	assets/test_large.sql	/^  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),$/;"	F
+staffing.is_lead_guide	assets/test_dump.sql	/^    is_lead_guide boolean NOT NULL$/;"	F
+staffing.is_lead_guide	assets/test_large.sql	/^  is_lead_guide BOOLEAN NOT NULL,$/;"	F
+staffing.microschool_terms_id	assets/test_dump.sql	/^    microschool_terms_id uuid NOT NULL,$/;"	F
+staffing.microschool_terms_id	assets/test_large.sql	/^  microschool_terms_id UUID NOT NULL REFERENCES microschool_terms (id), --renamed this column to correctly reflect the association$/;"	F
+states	assets/test_dump.sql	/^CREATE TABLE public.states ($/;"	t
+states	assets/test_large.sql	/^CREATE TABLE states ($/;"	t
+states.id	assets/test_dump.sql	/^    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,$/;"	F
+states.id	assets/test_large.sql	/^  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),$/;"	F
+states.state_abbrev	assets/test_dump.sql	/^    state_abbrev character(2)$/;"	F
+states.state_abbrev	assets/test_large.sql	/^  state_abbrev CHAR (2)$/;"	F
+states.state_name	assets/test_dump.sql	/^    state_name text,$/;"	F
+states.state_name	assets/test_large.sql	/^  state_name TEXT,$/;"	F
+students	assets/test_dump.sql	/^CREATE TABLE public.students ($/;"	t
+students	assets/test_large.sql	/^CREATE TABLE students ($/;"	t
+students.accept_medical_release	assets/test_dump.sql	/^    accept_medical_release boolean,$/;"	F
+students.accept_medical_release	assets/test_large.sql	/^  accept_medical_release BOOLEAN,$/;"	F
+students.address_1	assets/test_dump.sql	/^    address_1 text,$/;"	F
+students.address_1	assets/test_large.sql	/^  address_1 TEXT,$/;"	F
+students.address_2	assets/test_dump.sql	/^    address_2 text,$/;"	F
+students.address_2	assets/test_large.sql	/^  address_2 TEXT,$/;"	F
+students.airtable_id	assets/test_dump.sql	/^    airtable_id text,$/;"	F
+students.airtable_id	assets/test_large.sql	/^  airtable_id TEXT UNIQUE,$/;"	F
+students.birth_certificate	assets/test_dump.sql	/^    birth_certificate bytea,$/;"	F
+students.birth_certificate	assets/test_large.sql	/^  birth_certificate BYTEA,$/;"	F
+students.birth_country	assets/test_dump.sql	/^    birth_country text,$/;"	F
+students.birth_country	assets/test_large.sql	/^  birth_country TEXT,$/;"	F
+students.birth_date	assets/test_dump.sql	/^    birth_date date,$/;"	F
+students.birth_date	assets/test_large.sql	/^  birth_date DATE,$/;"	F
+students.birth_state	assets/test_dump.sql	/^    birth_state uuid,$/;"	F
+students.birth_state	assets/test_large.sql	/^  birth_state UUID REFERENCES states (id),$/;"	F
+students.city	assets/test_dump.sql	/^    city text,$/;"	F
+students.city	assets/test_large.sql	/^  city TEXT,$/;"	F
+students.complete_per	assets/test_large.sql	/^  complete_per funding_source,$/;"	F
+students.date_of_last_iep	assets/test_dump.sql	/^    date_of_last_iep date,$/;"	F
+students.date_of_last_iep	assets/test_large.sql	/^  date_of_last_iep DATE,$/;"	F
+students.desired_guide	assets/test_dump.sql	/^    desired_guide text,$/;"	F
+students.desired_guide	assets/test_large.sql	/^  desired_guide TEXT,$/;"	F
+students.desired_start_date	assets/test_dump.sql	/^    desired_start_date text,$/;"	F
+students.desired_start_date	assets/test_large.sql	/^  desired_start_date TEXT,$/;"	F
+students.email	assets/test_dump.sql	/^    email text,$/;"	F
+students.email	assets/test_large.sql	/^  email TEXT,$/;"	F
+students.emergency_contact_name_1	assets/test_dump.sql	/^    emergency_contact_name_1 text,$/;"	F
+students.emergency_contact_name_1	assets/test_large.sql	/^  emergency_contact_name_1 TEXT,$/;"	F
+students.emergency_contact_name_2	assets/test_dump.sql	/^    emergency_contact_name_2 text,$/;"	F
+students.emergency_contact_name_2	assets/test_large.sql	/^  emergency_contact_name_2 TEXT,$/;"	F
+students.emergency_contact_phone_1	assets/test_dump.sql	/^    emergency_contact_phone_1 text,$/;"	F
+students.emergency_contact_phone_1	assets/test_large.sql	/^  emergency_contact_phone_1 TEXT,$/;"	F
+students.emergency_contact_phone_2	assets/test_dump.sql	/^    emergency_contact_phone_2 text,$/;"	F
+students.emergency_contact_phone_2	assets/test_large.sql	/^  emergency_contact_phone_2 TEXT,$/;"	F
+students.emergency_contact_relationship_1	assets/test_dump.sql	/^    emergency_contact_relationship_1 text,$/;"	F
+students.emergency_contact_relationship_1	assets/test_large.sql	/^  emergency_contact_relationship_1 TEXT,$/;"	F
+students.emergency_contact_relationship_2	assets/test_dump.sql	/^    emergency_contact_relationship_2 text,$/;"	F
+students.emergency_contact_relationship_2	assets/test_large.sql	/^  emergency_contact_relationship_2 TEXT,$/;"	F
+students.enrolled_in_sequoia	assets/test_dump.sql	/^    enrolled_in_sequoia text$/;"	F
+students.enrolled_in_sequoia	assets/test_large.sql	/^  enrolled_in_sequoia TEXT --should this be a boolean?$/;"	F
+students.family_doctor	assets/test_dump.sql	/^    family_doctor text,$/;"	F
+students.family_doctor	assets/test_large.sql	/^  family_doctor TEXT,$/;"	F
+students.family_doctor_phone	assets/test_dump.sql	/^    family_doctor_phone text,$/;"	F
+students.family_doctor_phone	assets/test_large.sql	/^  family_doctor_phone TEXT,$/;"	F
+students.father_guardian_email	assets/test_dump.sql	/^    father_guardian_email text,$/;"	F
+students.father_guardian_email	assets/test_large.sql	/^  father_guardian_email TEXT,$/;"	F
+students.father_guardian_employer	assets/test_dump.sql	/^    father_guardian_employer text,$/;"	F
+students.father_guardian_employer	assets/test_large.sql	/^  father_guardian_employer TEXT,$/;"	F
+students.father_guardian_name	assets/test_dump.sql	/^    father_guardian_name text,$/;"	F
+students.father_guardian_name	assets/test_large.sql	/^  father_guardian_name TEXT,$/;"	F
+students.father_guardian_phone	assets/test_dump.sql	/^    father_guardian_phone text,$/;"	F
+students.father_guardian_phone	assets/test_large.sql	/^  father_guardian_phone TEXT,$/;"	F
+students.father_guardian_relationship	assets/test_dump.sql	/^    father_guardian_relationship text,$/;"	F
+students.father_guardian_relationship	assets/test_large.sql	/^  father_guardian_relationship TEXT,$/;"	F
+students.first_name	assets/test_dump.sql	/^    first_name text NOT NULL,$/;"	F
+students.first_name	assets/test_large.sql	/^  first_name TEXT NOT NULL,$/;"	F
+students.food_allergies	assets/test_dump.sql	/^    food_allergies text,$/;"	F
+students.food_allergies	assets/test_large.sql	/^  food_allergies TEXT,$/;"	F
+students.gender	assets/test_dump.sql	/^    gender text,$/;"	F
+students.gender	assets/test_large.sql	/^  gender TEXT,$/;"	F
+students.has_been_expelled	assets/test_dump.sql	/^    has_been_expelled boolean,$/;"	F
+students.has_been_expelled	assets/test_large.sql	/^  has_been_expelled BOOLEAN,$/;"	F
+students.health_problems	assets/test_dump.sql	/^    health_problems text,$/;"	F
+students.health_problems	assets/test_large.sql	/^  health_problems TEXT,$/;"	F
+students.id	assets/test_dump.sql	/^    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,$/;"	F
+students.id	assets/test_large.sql	/^  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),$/;"	F
+students.immunization_record	assets/test_dump.sql	/^    immunization_record bytea,$/;"	F
+students.immunization_record	assets/test_large.sql	/^  immunization_record BYTEA,$/;"	F
+students.is_esa	assets/test_dump.sql	/^    is_esa boolean,$/;"	F
+students.is_esa	assets/test_large.sql	/^  is_esa BOOLEAN,$/;"	F
+students.lacks_nighttime_residence	assets/test_dump.sql	/^    lacks_nighttime_residence boolean,$/;"	F
+students.lacks_nighttime_residence	assets/test_large.sql	/^  lacks_nighttime_residence BOOLEAN,$/;"	F
+students.language_first_acquired	assets/test_dump.sql	/^    language_first_acquired text,$/;"	F
+students.language_first_acquired	assets/test_large.sql	/^  language_first_acquired TEXT,$/;"	F
+students.language_spoken_most_often	assets/test_dump.sql	/^    language_spoken_most_often text,$/;"	F
+students.language_spoken_most_often	assets/test_large.sql	/^  language_spoken_most_often TEXT,$/;"	F
+students.last_grade_completed	assets/test_dump.sql	/^    last_grade_completed public.grade_level,$/;"	F
+students.last_grade_completed	assets/test_large.sql	/^  last_grade_completed grade_level,$/;"	F
+students.last_iep	assets/test_dump.sql	/^    last_iep bytea,$/;"	F
+students.last_iep	assets/test_large.sql	/^  last_iep BYTEA,$/;"	F
+students.last_name	assets/test_dump.sql	/^    last_name text,$/;"	F
+students.last_name	assets/test_large.sql	/^  last_name TEXT,$/;"	F
+students.last_school	assets/test_dump.sql	/^    last_school text,$/;"	F
+students.last_school	assets/test_large.sql	/^  last_school TEXT,$/;"	F
+students.last_school_address	assets/test_dump.sql	/^    last_school_address text,$/;"	F
+students.last_school_address	assets/test_large.sql	/^  last_school_address TEXT,$/;"	F
+students.last_school_phone	assets/test_dump.sql	/^    last_school_phone text,$/;"	F
+students.last_school_phone	assets/test_large.sql	/^  last_school_phone TEXT,$/;"	F
+students.medication_or_other_allergies	assets/test_dump.sql	/^    medication_or_other_allergies text,$/;"	F
+students.medication_or_other_allergies	assets/test_large.sql	/^  medication_or_other_allergies TEXT,$/;"	F
+students.medications	assets/test_dump.sql	/^    medications text,$/;"	F
+students.medications	assets/test_large.sql	/^  medications TEXT,$/;"	F
+students.medications_needed_during_school	assets/test_dump.sql	/^    medications_needed_during_school text,$/;"	F
+students.medications_needed_during_school	assets/test_large.sql	/^  medications_needed_during_school TEXT,$/;"	F
+students.middle_name	assets/test_dump.sql	/^    middle_name text,$/;"	F
+students.middle_name	assets/test_large.sql	/^  middle_name TEXT,$/;"	F
+students.mother_guardian_email	assets/test_dump.sql	/^    mother_guardian_email text,$/;"	F
+students.mother_guardian_email	assets/test_large.sql	/^  mother_guardian_email TEXT,$/;"	F
+students.mother_guardian_employer	assets/test_dump.sql	/^    mother_guardian_employer text,$/;"	F
+students.mother_guardian_employer	assets/test_large.sql	/^  mother_guardian_employer TEXT,$/;"	F
+students.mother_guardian_name	assets/test_dump.sql	/^    mother_guardian_name text,$/;"	F
+students.mother_guardian_name	assets/test_large.sql	/^  mother_guardian_name TEXT,$/;"	F
+students.mother_guardian_phone	assets/test_dump.sql	/^    mother_guardian_phone text,$/;"	F
+students.mother_guardian_phone	assets/test_large.sql	/^  mother_guardian_phone TEXT,$/;"	F
+students.mother_guardian_relationship	assets/test_dump.sql	/^    mother_guardian_relationship text,$/;"	F
+students.mother_guardian_relationship	assets/test_large.sql	/^  mother_guardian_relationship TEXT,$/;"	F
+students.new_enrollment	assets/test_dump.sql	/^    new_enrollment boolean,$/;"	F
+students.new_enrollment	assets/test_large.sql	/^  new_enrollment BOOLEAN,$/;"	F
+students.on_daily_medication	assets/test_dump.sql	/^    on_daily_medication boolean,$/;"	F
+students.on_daily_medication	assets/test_large.sql	/^  on_daily_medication BOOLEAN,$/;"	F
+students.parent_info	assets/test_dump.sql	/^    parent_info text,$/;"	F
+students.parent_info	assets/test_large.sql	/^  parent_info TEXT,$/;"	F
+students.phone	assets/test_dump.sql	/^    phone text,$/;"	F
+students.phone	assets/test_large.sql	/^  phone TEXT,$/;"	F
+students.preferred_first_name	assets/test_dump.sql	/^    preferred_first_name text,$/;"	F
+students.preferred_first_name	assets/test_large.sql	/^  preferred_first_name TEXT,$/;"	F
+students.prefix	assets/test_dump.sql	/^    prefix text,$/;"	F
+students.prefix	assets/test_large.sql	/^  prefix TEXT, --Added this because if we are going to include suffix then why not$/;"	F
+students.prenda_enrollment_date	assets/test_dump.sql	/^    prenda_enrollment_date date,$/;"	F
+students.prenda_enrollment_date	assets/test_large.sql	/^  prenda_enrollment_date DATE,$/;"	F
+students.primary_language_at_home	assets/test_dump.sql	/^    primary_language_at_home text,$/;"	F
+students.primary_language_at_home	assets/test_large.sql	/^  primary_language_at_home TEXT,$/;"	F
+students.proof_of_residence	assets/test_dump.sql	/^    proof_of_residence bytea,$/;"	F
+students.proof_of_residence	assets/test_large.sql	/^  proof_of_residence BYTEA,$/;"	F
+students.pw_id	assets/test_dump.sql	/^    pw_id text,$/;"	F
+students.pw_id	assets/test_large.sql	/^  pw_id TEXT UNIQUE,$/;"	F
+students.race	assets/test_dump.sql	/^    race text,$/;"	F
+students.race	assets/test_large.sql	/^  race TEXT,$/;"	F
+students.receives_special_education	assets/test_dump.sql	/^    receives_special_education boolean,$/;"	F
+students.receives_special_education	assets/test_large.sql	/^  receives_special_education BOOLEAN,$/;"	F
+students.recruited_by	assets/test_dump.sql	/^    recruited_by text,$/;"	F
+students.recruited_by	assets/test_large.sql	/^  recruited_by TEXT,$/;"	F
+students.referred_by	assets/test_dump.sql	/^    referred_by text,$/;"	F
+students.referred_by	assets/test_large.sql	/^  referred_by TEXT,$/;"	F
+students.sais_id	assets/test_dump.sql	/^    sais_id text,$/;"	F
+students.sais_id	assets/test_large.sql	/^  sais_id TEXT UNIQUE,$/;"	F
+students.sequoia_entry_date	assets/test_dump.sql	/^    sequoia_entry_date date,$/;"	F
+students.sequoia_entry_date	assets/test_large.sql	/^  sequoia_entry_date DATE,$/;"	F
+students.state	assets/test_dump.sql	/^    state uuid,$/;"	F
+students.state	assets/test_large.sql	/^  state UUID REFERENCES states (id),$/;"	F
+students.status	assets/test_dump.sql	/^    status text,$/;"	F
+students.status	assets/test_large.sql	/^  status TEXT,$/;"	F
+students.submitted	assets/test_dump.sql	/^    submitted boolean,$/;"	F
+students.submitted	assets/test_large.sql	/^  submitted BOOLEAN,$/;"	F
+students.suffix	assets/test_dump.sql	/^    suffix text,$/;"	F
+students.suffix	assets/test_large.sql	/^  suffix TEXT, --Added this because I saw a few cases in Zoho where the suffix was being appended to the last name$/;"	F
+students.surgeries_accidents_injuries_past_year	assets/test_dump.sql	/^    surgeries_accidents_injuries_past_year text,$/;"	F
+students.surgeries_accidents_injuries_past_year	assets/test_large.sql	/^  surgeries_accidents_injuries_past_year TEXT,$/;"	F
+students.typeform_id	assets/test_dump.sql	/^    typeform_id text,$/;"	F
+students.typeform_id	assets/test_large.sql	/^  typeform_id TEXT,$/;"	F
+students.typeform_microschool	assets/test_dump.sql	/^    typeform_microschool text,$/;"	F
+students.typeform_microschool	assets/test_large.sql	/^  typeform_microschool TEXT,$/;"	F
+students.video_release	assets/test_dump.sql	/^    video_release boolean,$/;"	F
+students.video_release	assets/test_large.sql	/^  video_release BOOLEAN,$/;"	F
+students.withdrawal_note	assets/test_dump.sql	/^    withdrawal_note text,$/;"	F
+students.withdrawal_note	assets/test_large.sql	/^  withdrawal_note TEXT,$/;"	F
+students.withdrawal_reason	assets/test_dump.sql	/^    withdrawal_reason text,$/;"	F
+students.withdrawal_reason	assets/test_large.sql	/^  withdrawal_reason TEXT,$/;"	F
+students.zip4	assets/test_dump.sql	/^    zip4 text,$/;"	F
+students.zip4	assets/test_large.sql	/^  zip4 TEXT,$/;"	F
+students.zip5	assets/test_dump.sql	/^    zip5 text,$/;"	F
+students.zip5	assets/test_large.sql	/^  zip5 TEXT,$/;"	F
+students.zoho_id	assets/test_dump.sql	/^    zoho_id text,$/;"	F
+students.zoho_id	assets/test_large.sql	/^  zoho_id TEXT UNIQUE,$/;"	F
+tableSkip	mocker/config.go	/^func (m *Mocker) tableSkip(tableName string) bool {$/;"	f
+temp_guides	assets/test_dump.sql	/^CREATE TABLE public.temp_guides ($/;"	t
+temp_guides	assets/test_large.sql	/^CREATE TABLE temp_guides ($/;"	t
+temp_guides.bio	assets/test_dump.sql	/^    bio text,$/;"	F
+temp_guides.bio	assets/test_large.sql	/^  bio TEXT,$/;"	F
+temp_guides.id	assets/test_dump.sql	/^    id integer NOT NULL,$/;"	F
+temp_guides.id	assets/test_large.sql	/^  id SERIAL PRIMARY KEY,$/;"	F
+temp_guides.photo	assets/test_dump.sql	/^    photo text$/;"	F
+temp_guides.photo	assets/test_large.sql	/^  photo TEXT,$/;"	F
+temp_guides.pw_user_id	assets/test_dump.sql	/^    pw_user_id text NOT NULL,$/;"	F
+temp_guides.pw_user_id	assets/test_large.sql	/^  pw_user_id TEXT NOT NULL,$/;"	F
+temp_microschool_location	assets/test_dump.sql	/^CREATE TABLE public.temp_microschool_location ($/;"	t
+temp_microschool_location	assets/test_large.sql	/^);CREATE TABLE temp_microschool_location ($/;"	t
+temp_microschool_location.city	assets/test_dump.sql	/^    city text$/;"	F
+temp_microschool_location.city	assets/test_large.sql	/^city TEXT$/;"	F
+temp_microschool_location.id	assets/test_dump.sql	/^    id integer NOT NULL,$/;"	F
+temp_microschool_location.id	assets/test_large.sql	/^id SERIAL PRIMARY KEY,$/;"	F
+temp_microschool_location.latitude	assets/test_dump.sql	/^    latitude text,$/;"	F
+temp_microschool_location.latitude	assets/test_large.sql	/^latitude TEXT,$/;"	F
+temp_microschool_location.longitude	assets/test_dump.sql	/^    longitude text,$/;"	F
+temp_microschool_location.longitude	assets/test_large.sql	/^longitude TEXT,$/;"	F
+temp_microschool_location.microschool_zoho_id	assets/test_dump.sql	/^    microschool_zoho_id text NOT NULL,$/;"	F
+temp_microschool_location.microschool_zoho_id	assets/test_large.sql	/^microschool_zoho_id TEXT NOT NULL,$/;"	F
+upsert_grade_enrollments	assets/test_large.sql	/^CREATE FUNCTION upsert_grade_enrollments(_student_id UUID,$/;"	f
+upsert_microschool_enrollments	assets/test_dump.sql	/^CREATE FUNCTION public.upsert_microschool_enrollments(_student_id uuid, _microschool_term_id uuid, _authorized_minutes integer, _cents_per_minute integer, _during daterange) RETURNS void$/;"	f
+upsert_microschool_enrollments	assets/test_large.sql	/^CREATE FUNCTION upsert_microschool_enrollments(_student_id UUID,$/;"	f
+upsert_microschool_terms	assets/test_dump.sql	/^CREATE FUNCTION public.upsert_microschool_terms(_microschool_id uuid, _min_grade public.grade_level, _max_grade public.grade_level, _capacity integer, _type public.microschool_type, _during daterange, _accepting_students boolean, _accepting_students_aug_2020 boolean, _publicly_visible boolean) RETURNS void$/;"	f
+upsert_microschool_terms	assets/test_large.sql	/^CREATE FUNCTION upsert_microschool_terms(_microschool_id UUID,$/;"	f
+upsert_students	assets/test_large.sql	/^CREATE FUNCTION upsert_students(_complete_per funding_source,$/;"	f
+users	assets/test_dump.sql	/^CREATE TABLE public.users ($/;"	t
+users	assets/test_large.sql	/^CREATE TABLE users ($/;"	t
+users.email	assets/test_dump.sql	/^    email text NOT NULL,$/;"	F
+users.email	assets/test_large.sql	/^  email TEXT UNIQUE NOT NULL,$/;"	F
+users.expiration	assets/test_dump.sql	/^    expiration timestamp without time zone,$/;"	F
+users.first_name	assets/test_dump.sql	/^    first_name text NOT NULL,$/;"	F
+users.first_name	assets/test_large.sql	/^  first_name TEXT NOT NULL,$/;"	F
+users.id	assets/test_dump.sql	/^    id integer NOT NULL,$/;"	F
+users.id	assets/test_large.sql	/^  id SERIAL PRIMARY KEY,$/;"	F
+users.is_active	assets/test_dump.sql	/^    is_active boolean DEFAULT true NOT NULL,$/;"	F
+users.is_active	assets/test_large.sql	/^  is_active BOOLEAN NOT NULL DEFAULT TRUE,$/;"	F
+users.is_admin	assets/test_dump.sql	/^    is_admin boolean DEFAULT false NOT NULL,$/;"	F
+users.is_admin	assets/test_large.sql	/^  is_admin BOOLEAN NOT NULL DEFAULT FALSE,$/;"	F
+users.last_name	assets/test_dump.sql	/^    last_name text NOT NULL,$/;"	F
+users.last_name	assets/test_large.sql	/^  last_name TEXT NOT NULL,$/;"	F
+users.pwdhash	assets/test_dump.sql	/^    pwdhash text NOT NULL,$/;"	F
+users.pwdhash	assets/test_large.sql	/^  pwdhash TEXT NOT NULL,$/;"	F
+users.username	assets/test_dump.sql	/^    username text NOT NULL,$/;"	F
+users.username	assets/test_large.sql	/^  username TEXT NOT NULL UNIQUE,$/;"	F
+valid_grade_enrollment	assets/test_dump.sql	/^CREATE FUNCTION public.valid_grade_enrollment(_during daterange, _grade_years_id uuid) RETURNS boolean$/;"	f
+valid_grade_enrollment	assets/test_large.sql	/^CREATE FUNCTION valid_grade_enrollment(_during DATERANGE, _grade_years_id UUID) RETURNS BOOLEAN AS $\$$/;"	f
+work	mocker/work.go	/^func work(worker <-chan []record, done chan<- bool, tableName string, desiredAmount int, db *pgxpool.Pool, writer io.Writer) {$/;"	f
+zoho_exceptions	assets/test_dump.sql	/^CREATE TABLE public.zoho_exceptions ($/;"	t
+zoho_exceptions	assets/test_large.sql	/^CREATE TABLE zoho_exceptions ($/;"	t
+zoho_exceptions.data	assets/test_dump.sql	/^    data json NOT NULL,$/;"	F
+zoho_exceptions.data	assets/test_large.sql	/^  data JSON NOT NULL,$/;"	F
+zoho_exceptions.error	assets/test_dump.sql	/^    error json$/;"	F
+zoho_exceptions.error	assets/test_large.sql	/^  error JSON$/;"	F
+zoho_exceptions.id	assets/test_dump.sql	/^    id integer NOT NULL,$/;"	F
+zoho_exceptions.id	assets/test_large.sql	/^  id SERIAL PRIMARY KEY,$/;"	F
+zoho_exceptions.insert_report	assets/test_dump.sql	/^    insert_report text NOT NULL,$/;"	F
+zoho_exceptions.insert_report	assets/test_large.sql	/^  insert_report text NOT NULL,$/;"	F
