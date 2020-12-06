@@ -10,9 +10,11 @@ import (
 	"os"
 	"path/filepath"
 
-	_ "github.com/lib/pq"
+	_ "github.com/lib/pq" // sql driver
+	"github.com/stretchr/testify/mock"
 
 	"github.com/jmbaur/databuilder/config"
+	"github.com/jmbaur/databuilder/db"
 )
 
 // Execute is the entrypoint of the program
@@ -101,17 +103,11 @@ func Execute() {
 	fmt.Println("IGNORE")
 	fmt.Println(cfg, reader)
 
-	// insertChan := make(chan db.Record)
-	// queryChan := make(chan string)
-	// done := make(chan bool)
+	queryChan := make(chan db.Query)
+	resultChan := make(chan db.Result)
+	insertChan := make(chan db.Record)
 
-	// mock.Mock(reader, cfg)
-	// go db.WriteRecords(conn)
-	// go func() {
-	// 	for {
-	// 		<-done
-	// 	}
-	// }()
-
-	// m.Mock(writer)
+	go mock.Mock(queryChan, resultChan, insertChan, cfg, reader)
+	go db.ListenForQueries(queryChan, resultChan)
+	db.Insert(insertChan, conn, writer)
 }

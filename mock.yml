@@ -8,9 +8,9 @@
 
 tables:
     - name: users # the name of the table
-      major_entities: [Person] # any gofakeit function that returns a struct and not a single value
       ignore: false # tells program to skip this table
       amount: 2
+      major_entities: [Person] # any gofakeit function that returns a struct and not a single value
       columns:
           - name: first_name
             mock_type: FirstName # a corresponding gofakeit function that returns a value appropriate for our use case

@@ -6,18 +6,21 @@
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
 Column	config/config.go	/^type Column struct {$/;"	t
 Config	config/config.go	/^type Config struct {$/;"	t
-Config	mocker/config.go	/^type Config struct {$/;"	t
+Config	mock/config.go	/^type Config struct {$/;"	t
 Execute	cmd/databuilder.go	/^func Execute() {$/;"	f
-Fatal	logg/logg.go	/^	Fatal$/;"	c
-Info	logg/logg.go	/^	Info = iota$/;"	c
-Mock	mocker/mock.go	/^func (m *Mocker) Mock(writer io.Writer) error {$/;"	f
-Mocker	mocker/config.go	/^type Mocker struct {$/;"	t
+Insert	db/db.go	/^func Insert(insertChan chan Record, conn *sql.DB, writer io.Writer) {$/;"	f
+ListenForQueries	db/db.go	/^func ListenForQueries(queryChan <-chan Query, resultChan chan<- Result) {$/;"	f
+Mock	mock/mock.go	/^func Mock(queryChan chan db.Query, resultChan chan db.Result, insertChan chan db.Record, cfg config.Config, reader io.Reader) {$/;"	f
+Mocker	mock/config.go	/^type Mocker struct {$/;"	t
 Parse	config/config.go	/^func Parse(reader io.Reader) *Config {$/;"	f
-Parse	mocker/parse.go	/^func (m *Mocker) Parse(input io.Reader) {$/;"	f
-Printf	logg/logg.go	/^func Printf(level int, format string, v ...interface{}) {$/;"	f
+Parse	mock/parse.go	/^func (m *Mocker) Parse(input io.Reader) {$/;"	f
+Query	db/db.go	/^type Query struct {$/;"	t
+Record	db/db.go	/^type Record struct {$/;"	t
+Result	db/db.go	/^type Result []interface{}$/;"	t
+String	db/db.go	/^func (q *Query) String() string {$/;"	f
+String	db/db.go	/^func (r *Record) String() (str string) {$/;"	f
 Table	config/config.go	/^type Table struct {$/;"	t
-Warn	logg/logg.go	/^	Warn$/;"	c
-Write	mocker/config.go	/^func (m *Mocker) Write(p []byte) (n int, err error) {$/;"	f
+Write	mock/config.go	/^func (m *Mocker) Write(p []byte) (n int, err error) {$/;"	f
 adults	assets/test_dump.sql	/^CREATE TABLE public.adults ($/;"	t
 adults	assets/test_large.sql	/^CREATE TABLE adults ($/;"	t
 adults.address_1	assets/test_dump.sql	/^    address_1 text,$/;"	F
@@ -58,7 +61,7 @@ adults.zip5	assets/test_dump.sql	/^    zip5 text,$/;"	F
 adults.zip5	assets/test_large.sql	/^  zip5 TEXT,$/;"	F
 adults.zoho_id	assets/test_dump.sql	/^    zoho_id text,$/;"	F
 adults.zoho_id	assets/test_large.sql	/^  zoho_id TEXT UNIQUE,$/;"	F
-alterTable	mocker/util.go	/^func (m *Mocker) alterTable(alterStmt nodes.AlterTableStmt) error {$/;"	f
+alterTable	mock/util.go	/^func (m *Mocker) alterTable(alterStmt nodes.AlterTableStmt) error {$/;"	f
 applications	assets/test_dump.sql	/^CREATE TABLE public.applications ($/;"	t
 applications	assets/test_large.sql	/^CREATE TABLE applications ($/;"	t
 applications.application_status	assets/test_dump.sql	/^    application_status public.application_status NOT NULL,$/;"	F
@@ -94,11 +97,11 @@ attendance.minutes	assets/test_dump.sql	/^    minutes integer NOT NULL,$/;"	F
 attendance.minutes	assets/test_large.sql	/^  minutes INTEGER NOT NULL,$/;"	F
 attendance.student_id	assets/test_dump.sql	/^    student_id uuid NOT NULL,$/;"	F
 attendance.student_id	assets/test_large.sql	/^  student_id UUID NOT NULL REFERENCES students (id),$/;"	F
-buildInsertStmt	mocker/work.go	/^func buildInsertStmt(records []record, table string) (*string, error) {$/;"	f
+buildInsertStmt	mock/work.go	/^func buildInsertStmt(records []record, table string) (*string, error) {$/;"	f
 cmd	cmd/databuilder.go	/^package cmd$/;"	p
 config	config/config.go	/^package config$/;"	p
-createEnum	mocker/util.go	/^func (m *Mocker) createEnum(enum nodes.CreateEnumStmt) error {$/;"	f
-createTable	mocker/util.go	/^func (m *Mocker) createTable(table nodes.CreateStmt, ifNotExists bool) error {$/;"	f
+createEnum	mock/util.go	/^func (m *Mocker) createEnum(enum nodes.CreateEnumStmt) error {$/;"	f
+createTable	mock/util.go	/^func (m *Mocker) createTable(table nodes.CreateStmt, ifNotExists bool) error {$/;"	f
 data_exceptions	assets/test_dump.sql	/^CREATE TABLE public.data_exceptions ($/;"	t
 data_exceptions	assets/test_large.sql	/^CREATE TABLE data_exceptions($/;"	t
 data_exceptions.created_at	assets/test_dump.sql	/^    created_at timestamp without time zone DEFAULT now()$/;"	F
@@ -113,8 +116,9 @@ data_exceptions.fixed	assets/test_dump.sql	/^    fixed boolean DEFAULT false,$/;
 data_exceptions.fixed	assets/test_large.sql	/^  fixed BOOLEAN DEFAULT false, $/;"	F
 data_exceptions.id	assets/test_dump.sql	/^    id integer NOT NULL,$/;"	F
 data_exceptions.id	assets/test_large.sql	/^  id SERIAL,$/;"	F
-dropEnum	mocker/util.go	/^func (m *Mocker) dropEnum(name string) error {$/;"	f
-dropTable	mocker/util.go	/^func (m *Mocker) dropTable(tableName string) error {$/;"	f
+db	db/db.go	/^package db$/;"	p
+dropEnum	mock/util.go	/^func (m *Mocker) dropEnum(name string) error {$/;"	f
+dropTable	mock/util.go	/^func (m *Mocker) dropTable(tableName string) error {$/;"	f
 edkey_attendance_comparison	assets/test_dump.sql	/^CREATE TABLE public.edkey_attendance_comparison ($/;"	t
 edkey_attendance_comparison	assets/test_large.sql	/^CREATE TABLE edkey_attendance_comparison($/;"	t
 edkey_attendance_comparison.Date	assets/test_dump.sql	/^    "Date" date,$/;"	F
@@ -217,12 +221,12 @@ edkey_students_dump.site	assets/test_dump.sql	/^    site text,$/;"	F
 edkey_students_dump.site	assets/test_large.sql	/^  "site" TEXT,$/;"	F
 edkey_students_dump.total_minutes	assets/test_dump.sql	/^    total_minutes integer,$/;"	F
 edkey_students_dump.total_minutes	assets/test_large.sql	/^  "total_minutes" INTEGER,$/;"	F
-findColumn	mocker/util.go	/^func (m *Mocker) findColumn(tableIdx int, columnName string) int {$/;"	f
-findConstraint	mocker/util.go	/^func (m *Mocker) findConstraint(tableIdx int, conName string) int {$/;"	f
-findEnum	mocker/util.go	/^func (m *Mocker) findEnum(name string) int {$/;"	f
-findEnumDef	mocker/mock.go	/^func findEnumDef(enums []nodes.CreateEnumStmt, enumName string) int {$/;"	f
-findForeignConstraint	mocker/mock.go	/^func findForeignConstraint(columnConstraints []nodes.Node) int {$/;"	f
-findTable	mocker/util.go	/^func (m *Mocker) findTable(tableName string) int {$/;"	f
+findColumn	mock/util.go	/^func (m *Mocker) findColumn(tableIdx int, columnName string) int {$/;"	f
+findConstraint	mock/util.go	/^func (m *Mocker) findConstraint(tableIdx int, conName string) int {$/;"	f
+findEnum	mock/util.go	/^func (m *Mocker) findEnum(name string) int {$/;"	f
+findEnumDef	mock/mock.go	/^func findEnumDef(enums []nodes.CreateEnumStmt, enumName string) int {$/;"	f
+findForeignConstraint	mock/mock.go	/^func findForeignConstraint(columnConstraints []nodes.Node) int {$/;"	f
+findTable	mock/util.go	/^func (m *Mocker) findTable(tableName string) int {$/;"	f
 fountain_dump	assets/test_dump.sql	/^CREATE TABLE public.fountain_dump ($/;"	t
 fountain_dump	assets/test_large.sql	/^CREATE TABLE fountain_dump$/;"	t
 fountain_dump.addresses	assets/test_dump.sql	/^    addresses text[],$/;"	F
@@ -448,9 +452,9 @@ funding_sources.account_number	assets/test_dump.sql	/^    account_number text,$/
 funding_sources.id	assets/test_dump.sql	/^    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,$/;"	F
 funding_sources.name	assets/test_dump.sql	/^    name text NOT NULL,$/;"	F
 funding_sources.student_cap	assets/test_dump.sql	/^    student_cap integer$/;"	F
-generateText	mocker/fake.go	/^func generateText(column string, isNotNull bool) string {$/;"	f
-getRandomEnumValue	mocker/mock.go	/^func getRandomEnumValue(enums []nodes.CreateEnumStmt, indexOfEnum int) interface{} {$/;"	f
-getRandomForeignRefValue	mocker/mock.go	/^func getRandomForeignRefValue(db *pgxpool.Pool, foreigntable, foreigncolumn string) interface{} {$/;"	f
+generateText	mock/fake.go	/^func generateText(column string, isNotNull bool) string {$/;"	f
+getRandomEnumValue	mock/mock.go	/^func getRandomEnumValue(enums []nodes.CreateEnumStmt, indexOfEnum int) interface{} {$/;"	f
+getRandomForeignRefValue	mock/mock.go	/^func getRandomForeignRefValue(db *pgxpool.Pool, foreigntable, foreigncolumn string) interface{} {$/;"	f
 globals	assets/test_dump.sql	/^CREATE TABLE public.globals ($/;"	t
 globals	assets/test_large.sql	/^CREATE TABLE globals ($/;"	t
 globals.document	assets/test_dump.sql	/^    document jsonb$/;"	F
@@ -488,8 +492,9 @@ guide_mentors.id	assets/test_dump.sql	/^    id uuid DEFAULT public.uuid_generate
 guide_mentors.id	assets/test_large.sql	/^  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),$/;"	F
 guide_mentors.mentor_id	assets/test_dump.sql	/^    mentor_id uuid NOT NULL$/;"	F
 guide_mentors.mentor_id	assets/test_large.sql	/^  mentor_id UUID NOT NULL REFERENCES adults (id),$/;"	F
-logg	logg/logg.go	/^package logg$/;"	p
-main	logg/logg.go	/^func main() {$/;"	f
+insert	chan_demo.go	/^func insert(insertChan chan string) {$/;"	f
+main	chan_demo.go	/^func main() {$/;"	f
+main	chan_demo.go	/^package main$/;"	p
 main	main.go	/^func main() {$/;"	f
 main	main.go	/^package main$/;"	p
 microschool_enrollments	assets/test_dump.sql	/^CREATE TABLE public.microschool_enrollments ($/;"	t
@@ -572,13 +577,14 @@ microschools.zoho_id	assets/test_large.sql	/^  zoho_id TEXT UNIQUE,$/;"	F
 migrations	assets/test_dump.sql	/^CREATE TABLE public.migrations ($/;"	t
 migrations.time	assets/test_dump.sql	/^    "time" timestamp without time zone$/;"	F
 migrations.version	assets/test_dump.sql	/^    version integer,$/;"	F
-mocker	mocker/config.go	/^package mocker$/;"	p
-mocker	mocker/fake.go	/^package mocker$/;"	p
-mocker	mocker/mock.go	/^package mocker$/;"	p
-mocker	mocker/parse.go	/^package mocker$/;"	p
-mocker	mocker/util.go	/^package mocker$/;"	p
-mocker	mocker/work.go	/^package mocker$/;"	p
-passesConstraints	mocker/mock.go	/^func passesConstraints(widget interface{}, constraints []nodes.Constraint) bool {$/;"	f
+mock	chan_demo.go	/^func mock(insertChan, queryChan, resultChan chan string) {$/;"	f
+mocker	mock/config.go	/^package mocker$/;"	p
+mocker	mock/fake.go	/^package mocker$/;"	p
+mocker	mock/mock.go	/^package mocker$/;"	p
+mocker	mock/parse.go	/^package mocker$/;"	p
+mocker	mock/util.go	/^package mocker$/;"	p
+mocker	mock/work.go	/^package mocker$/;"	p
+passesConstraints	mock/mock.go	/^func passesConstraints(widget interface{}, constraints []nodes.Constraint) bool {$/;"	f
 prendaworld_attendance_dump	assets/test_dump.sql	/^CREATE TABLE public.prendaworld_attendance_dump ($/;"	t
 prendaworld_attendance_dump	assets/test_large.sql	/^CREATE TABLE prendaworld_attendance_dump($/;"	t
 prendaworld_attendance_dump.Grade	assets/test_dump.sql	/^    "Grade" text,$/;"	F
@@ -599,7 +605,7 @@ prendaworld_attendance_dump.partner	assets/test_dump.sql	/^    partner text,$/;"
 prendaworld_attendance_dump.partner	assets/test_large.sql	/^  "partner" TEXT,$/;"	F
 prendaworld_attendance_dump.year_month	assets/test_dump.sql	/^    year_month text,$/;"	F
 prendaworld_attendance_dump.year_month	assets/test_large.sql	/^  "year_month" TEXT,$/;"	F
-prep	mocker/config.go	/^func (m *Mocker) prep() error {$/;"	f
+prep	mock/config.go	/^func (m *Mocker) prep() error {$/;"	f
 private_funding_sources	assets/test_dump.sql	/^CREATE TABLE public.private_funding_sources ($/;"	t
 private_funding_sources.adult_id	assets/test_dump.sql	/^    adult_id uuid$/;"	F
 private_funding_sources.customer_id	assets/test_dump.sql	/^    customer_id text,$/;"	F
@@ -726,7 +732,8 @@ pw_subscriptions_dump.Paid Amount	assets/test_dump.sql	/^    "Paid Amount" integ
 pw_subscriptions_dump.School Id	assets/test_dump.sql	/^    "School Id" text,$/;"	F
 pw_subscriptions_dump.School Type	assets/test_dump.sql	/^    "School Type" text$/;"	F
 pw_subscriptions_dump.Subscription Status	assets/test_dump.sql	/^    "Subscription Status" text,$/;"	F
-record	mocker/mock.go	/^type record map[string]interface{}$/;"	t
+query	chan_demo.go	/^func query(queryChan, resultChan chan string) {$/;"	f
+record	mock/mock.go	/^type record map[string]interface{}$/;"	t
 relationships	assets/test_dump.sql	/^CREATE TABLE public.relationships ($/;"	t
 relationships	assets/test_large.sql	/^CREATE TABLE relationships ($/;"	t
 relationships.guardian_id	assets/test_dump.sql	/^    guardian_id uuid NOT NULL,$/;"	F
@@ -932,7 +939,7 @@ students.zip5	assets/test_dump.sql	/^    zip5 text,$/;"	F
 students.zip5	assets/test_large.sql	/^  zip5 TEXT,$/;"	F
 students.zoho_id	assets/test_dump.sql	/^    zoho_id text,$/;"	F
 students.zoho_id	assets/test_large.sql	/^  zoho_id TEXT UNIQUE,$/;"	F
-tableSkip	mocker/config.go	/^func (m *Mocker) tableSkip(tableName string) bool {$/;"	f
+tableSkip	mock/config.go	/^func (m *Mocker) tableSkip(tableName string) bool {$/;"	f
 temp_guides	assets/test_dump.sql	/^CREATE TABLE public.temp_guides ($/;"	t
 temp_guides	assets/test_large.sql	/^CREATE TABLE temp_guides ($/;"	t
 temp_guides.bio	assets/test_dump.sql	/^    bio text,$/;"	F
@@ -982,7 +989,7 @@ users.username	assets/test_dump.sql	/^    username text NOT NULL,$/;"	F
 users.username	assets/test_large.sql	/^  username TEXT NOT NULL UNIQUE,$/;"	F
 valid_grade_enrollment	assets/test_dump.sql	/^CREATE FUNCTION public.valid_grade_enrollment(_during daterange, _grade_years_id uuid) RETURNS boolean$/;"	f
 valid_grade_enrollment	assets/test_large.sql	/^CREATE FUNCTION valid_grade_enrollment(_during DATERANGE, _grade_years_id UUID) RETURNS BOOLEAN AS $\$$/;"	f
-work	mocker/work.go	/^func work(worker <-chan []record, done chan<- bool, tableName string, desiredAmount int, db *pgxpool.Pool, writer io.Writer) {$/;"	f
+work	mock/work.go	/^func work(worker <-chan []record, done chan<- bool, tableName string, desiredAmount int, db *pgxpool.Pool, writer io.Writer) {$/;"	f
 zoho_exceptions	assets/test_dump.sql	/^CREATE TABLE public.zoho_exceptions ($/;"	t
 zoho_exceptions	assets/test_large.sql	/^CREATE TABLE zoho_exceptions ($/;"	t
 zoho_exceptions.data	assets/test_dump.sql	/^    data json NOT NULL,$/;"	F

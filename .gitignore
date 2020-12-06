@@ -1,3 +1,4 @@
 tmp/
 *.swp
-out.sql
+mock.sql
+tags*

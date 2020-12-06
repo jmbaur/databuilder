@@ -11,12 +11,12 @@ cmd = "go build -o ./tmp/main ."
 # Binary file yields from `cmd`.
 bin = "tmp/main"
 # Customize binary.
-full_bin = "./tmp/main -connection postgres://user:password@192.168.1.30:5432/test_db -ignore dump -amount 1 -out out.sql ./assets/test_large.sql" # file
-# full_bin = "cat assets/test_large.sql | ./tmp/main -connection postgres://user:pwd@localhost:6543/test -ignore dump -amount 10 -out out.sql" # stdin
+full_bin = "./tmp/main --connection postgres://user:password@localhost:5432/test_db?sslmode=disable --out mock.sql ./assets/test_dump.sql"
+# full_bin = "cat assets/test_large.sql | ./tmp/main --connection postgres://user:password@localhost:5432/test_db --out mock.sql" - # stdin
 # Watch these filename extensions.
-include_ext = ["go"]
+include_ext = ["go", "yml"]
 # Ignore these filename extensions or directories.
-exclude_dir = ["tmp", "vendor",]
+exclude_dir = ["tmp", "vendor", "assets",]
 # Exclude files.
 exclude_file = []
 # This log file places in your tmp_dir.
