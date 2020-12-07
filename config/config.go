@@ -33,12 +33,14 @@ type Column struct {
 }
 
 // Parse returns a Config struct to be used in the mocking process
-func Parse(reader io.Reader) *Config {
+func Parse(reader io.Reader) Config {
 	var cfg Config
 	data, err := ioutil.ReadAll(reader)
 	if err != nil {
 		log.Fatalf("failed to read config data: %v\n", err)
 	}
-	yaml.Unmarshal(data, &cfg)
-	return &cfg
+	if err := yaml.Unmarshal(data, &cfg); err != nil {
+		log.Fatalf("failed to unmarshal config file: %v\n", err)
+	}
+	return cfg
 }

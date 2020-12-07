@@ -1,127 +1,100 @@
-package mocker
+package mock
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"math/rand"
-	"os"
-	"strconv"
-	"time"
 
-	"github.com/brianvoe/gofakeit/v5"
 	"github.com/jackc/pgx/v4/pgxpool"
-	"github.com/jmbaur/databuilder/config"
 	"github.com/jmbaur/databuilder/db"
 	nodes "github.com/lfittl/pg_query_go/nodes"
 )
 
-type record map[string]interface{}
-
 // Mock traverses the Postgres AST and creates fake records
-func Mock(queryChan chan db.Query, resultChan chan db.Result, insertChan chan db.Record, cfg config.Config, reader io.Reader) {
-	gofakeit.Seed(time.Now().UnixNano())
+func Mock(queryChan chan db.Query, resultChan chan db.Result, insertChan chan db.Record, schema *Schema) {
+	// gofakeit.Seed(time.Now().UnixNano())
 
-	for _, table := range m.Tables {
-		if m.tableSkip(*table.Relation.Relname) {
-			continue
-		}
+	// for _, table := range schema.Tables {
+	// 	for {
+	// 		r := db.Record{}
+	// 		for _, tableElement := range table.TableElts.Items {
 
-		worker := make(chan []record)
-		done := make(chan bool)
+	// 			column, okColumn := tableElement.(nodes.ColumnDef)
+	// 			if !okColumn {
+	// 				continue
+	// 			}
 
-		go work(worker, done, *table.Relation.Relname, m.Config.Amount, m.Config.Db, writer)
-		go func() {
-			if isDone := <-done; isDone {
-				// TODO: go to next table
-				os.Exit(10)
-			}
-		}()
+	// 			if column.TypeName == nil {
+	// 				continue
+	// 			}
 
-		for {
-			r := make(record)
-			for _, tableElement := range table.TableElts.Items {
+	// 			columnName := *column.Colname
+	// 			var columnType string
+	// 			var foreigncolumn, foreigntable *string
+	// 			for _, t := range column.TypeName.Names.Items {
+	// 				columnType = t.(nodes.String).Str
+	// 				if columnType == "pg_catalog" {
+	// 					constraints := column.Constraints.Items
+	// 					constrIndex := findForeignConstraint(constraints)
+	// 					if constrIndex < 0 {
+	// 						continue
+	// 					}
+	// 					tmpForCol := constraints[constrIndex].(nodes.Constraint).PkAttrs.Items[0].(nodes.String).Str
+	// 					foreigncolumn = &tmpForCol
+	// 					foreigntable = constraints[constrIndex].(nodes.Constraint).Pktable.Relname
+	// 					break
+	// 				}
+	// 			}
 
-				column, okColumn := tableElement.(nodes.ColumnDef)
-				if !okColumn {
-					continue
-				}
-
-				if column.TypeName == nil {
-					continue
-				}
-
-				columnName := *column.Colname
-				var columnType string
-				var foreigncolumn, foreigntable *string
-				for _, t := range column.TypeName.Names.Items {
-					columnType = t.(nodes.String).Str
-					if columnType == "pg_catalog" {
-						constraints := column.Constraints.Items
-						constrIndex := findForeignConstraint(constraints)
-						if constrIndex < 0 {
-							continue
-						}
-						tmpForCol := constraints[constrIndex].(nodes.Constraint).PkAttrs.Items[0].(nodes.String).Str
-						foreigncolumn = &tmpForCol
-						foreigntable = constraints[constrIndex].(nodes.Constraint).Pktable.Relname
-						break
-					}
-				}
-
-				var columnValue interface{}
-				switch columnType {
-				case "serial":
-					fallthrough
-				case "uuid":
-					continue
-				case "int4": // "signed 4-byte integer "https://www.postgresql.org/docs/8.1/datatype.html
-					columnValue = fmt.Sprintf("%d", gofakeit.Uint32())
-				case "bool":
-					fallthrough
-				case "boolean":
-					columnValue = strconv.FormatBool(gofakeit.Bool())
-				case "varchar":
-					fallthrough
-				case "text":
-					columnValue = fmt.Sprintf("'%s'", generateText(columnName, column.IsNotNull))
-				case "date":
-					columnValue = fmt.Sprintf("'%s'", gofakeit.Date().Format(time.RFC3339))
-				case "timestamp":
-					columnValue = fmt.Sprintf("'%s'", gofakeit.Date().Format(time.RFC3339))
-				case "daterange":
-					date1 := gofakeit.Date()
-					date2 := date1.Add(time.Duration(gofakeit.Number(1, 10000)) * time.Hour)
-					columnValue = fmt.Sprintf("'[%s,%s]'", date1.Format(time.RFC3339), date2.Format(time.RFC3339))
-				case "pg_catalog":
-					columnValue = getRandomForeignRefValue(m.Config.Db, *foreigntable, *foreigncolumn)
-				case "json":
-					json, _ := json.Marshal(struct {
-						Status string `json:"status"`
-					}{Status: "JSON is not yet implemented."})
-					columnValue = fmt.Sprintf("'%s'", json)
-				case "bytea":
-					fallthrough
-				case "jsonb":
-					continue
-				default:
-					// is most likely an enum type
-					enumIndex := findEnumDef(m.Enums, columnType)
-					if enumIndex < 0 {
-						log.Printf("Could not find enum %s\n", columnType)
-						continue
-					}
-					columnValue = fmt.Sprintf("'%s'", getRandomEnumValue(m.Enums, enumIndex))
-				}
-				r[columnName] = columnValue
-			}
-
-			worker <- []record{r}
-		}
-	}
-	return nil
+	// 			var columnValue interface{}
+	// 			switch columnType {
+	// 			case "serial":
+	// 				fallthrough
+	// 			case "uuid":
+	// 				continue
+	// 			case "int4": // "signed 4-byte integer "https://www.postgresql.org/docs/8.1/datatype.html
+	// 				columnValue = fmt.Sprintf("%d", gofakeit.Uint32())
+	// 			case "bool":
+	// 				fallthrough
+	// 			case "boolean":
+	// 				columnValue = strconv.FormatBool(gofakeit.Bool())
+	// 			case "varchar":
+	// 				fallthrough
+	// 			case "text":
+	// 				columnValue = fmt.Sprintf("'%s'", generateText(columnName, column.IsNotNull))
+	// 			case "date":
+	// 				columnValue = fmt.Sprintf("'%s'", gofakeit.Date().Format(time.RFC3339))
+	// 			case "timestamp":
+	// 				columnValue = fmt.Sprintf("'%s'", gofakeit.Date().Format(time.RFC3339))
+	// 			case "daterange":
+	// 				date1 := gofakeit.Date()
+	// 				date2 := date1.Add(time.Duration(gofakeit.Number(1, 10000)) * time.Hour)
+	// 				columnValue = fmt.Sprintf("'[%s,%s]'", date1.Format(time.RFC3339), date2.Format(time.RFC3339))
+	// 			case "pg_catalog":
+	// 				columnValue = getRandomForeignRefValue(schema.Config.Db, *foreigntable, *foreigncolumn)
+	// 			case "json":
+	// 				json, _ := json.Marshal(struct {
+	// 					Status string `json:"status"`
+	// 				}{Status: "JSON is not yet implemented."})
+	// 				columnValue = fmt.Sprintf("'%s'", json)
+	// 			case "bytea":
+	// 				fallthrough
+	// 			case "jsonb":
+	// 				continue
+	// 			default:
+	// 				// is most likely an enum type
+	// 				enumIndex := findEnumDef(schema.Enums, columnType)
+	// 				if enumIndex < 0 {
+	// 					log.Printf("Could not find enum %s\n", columnType)
+	// 					continue
+	// 				}
+	// 				columnValue = fmt.Sprintf("'%s'", getRandomEnumValue(schema.Enums, enumIndex))
+	// 			}
+	// 			r[columnName] = columnValue
+	// 		}
+	// 	}
+	// }
 }
 
 func findEnumDef(enums []nodes.CreateEnumStmt, enumName string) int {

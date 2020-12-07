@@ -1,4 +1,4 @@
-package mocker
+package mock
 
 import (
 	"strconv"

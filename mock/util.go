@@ -1,4 +1,4 @@
-package mocker
+package mock
 
 import (
 	"fmt"
@@ -6,145 +6,145 @@ import (
 	nodes "github.com/lfittl/pg_query_go/nodes"
 )
 
-func (m *Mocker) createTable(table nodes.CreateStmt, ifNotExists bool) error {
-	idx := m.findTable(*table.Relation.Relname)
-	if idx >= 0 && ifNotExists {
-		return nil
+func (s Schema) createTable(create nodes.CreateStmt) (*nodes.CreateStmt, error) {
+	_, exists := s.Tables[*create.Relation.Relname]
+	if exists {
+		var err error
+		if !create.IfNotExists {
+			err = fmt.Errorf("table '%s' already exists", *create.Relation.Relname)
+		}
+		return nil, err
 	}
-	if idx >= 0 && !ifNotExists {
-		return fmt.Errorf("table already exists")
-	}
-	// spew.Dump(table)
-	m.Tables = append(m.Tables, table)
-	return nil
+	return &create, nil
 }
 
-func (m *Mocker) alterTable(alterStmt nodes.AlterTableStmt) error {
-	idx := m.findTable(*alterStmt.Relation.Relname)
-	if idx < 0 {
-		return fmt.Errorf("table not found")
+func (s Schema) alterTable(alter nodes.AlterTableStmt) (*nodes.CreateStmt, error) {
+	tablename := *alter.Relation.Relname
+	createStmt, exists := s.Tables[tablename]
+	if !exists {
+		var err error
+		if !alter.MissingOk {
+			err = fmt.Errorf("table '%s' does not exist", tablename)
+		}
+		return nil, err
 	}
 
-	for _, v := range alterStmt.Cmds.Items {
-		cmd, ok := v.(nodes.AlterTableCmd)
-		if !ok {
-			return fmt.Errorf("type assertion went bad to get alter table command")
-		}
+	for _, v := range alter.Cmds.Items {
+		cmd, _ := v.(nodes.AlterTableCmd)
 
 		switch cmd.Subtype {
-		case nodes.AT_AddColumn:
-			def := cmd.Def.(nodes.ColumnDef)
-			columns := m.Tables[idx].TableElts.Items
-			m.Tables[idx].TableElts.Items = append(columns, def)
-		case nodes.AT_DropColumn:
-			columnIdx := m.findColumn(idx, *cmd.Name)
-			if columnIdx < 0 && cmd.MissingOk {
-				return nil
-			} else if columnIdx < 0 {
-				return fmt.Errorf("column to drop not found")
-			}
-			columns := m.Tables[idx].TableElts.Items
-			m.Tables[idx].TableElts.Items = append(columns[:columnIdx], columns[columnIdx+1:]...)
 		case nodes.AT_AddConstraint:
 			constraint := cmd.Def.(nodes.Constraint)
-			idxConstr := m.findConstraint(idx, *constraint.Conname)
-			if idxConstr < 0 {
-				m.Tables[idx].Constraints.Items = append(m.Tables[idx].Constraints.Items, constraint)
-			} else {
-				m.Tables[idx].Constraints.Items[idxConstr] = constraint
-			}
-		case nodes.AT_DropConstraint:
-			idxConstr := m.findConstraint(idx, *cmd.Name)
-			if idxConstr < 0 && cmd.MissingOk {
-				return nil
-			} else if idxConstr < 0 {
-				return fmt.Errorf("could not find constraint")
-			}
-			constraints := m.Tables[idx].Constraints.Items
-			m.Tables[idx].Constraints.Items = append(constraints[:idxConstr], constraints[idxConstr+1:]...)
-		default:
-			return fmt.Errorf("Alter table type not supported: %d\n", cmd.Subtype) // https://github.com/lfittl/pg_query_go/blob/master/nodes/alter_table_type.go
+			// If we are not using pg_dump provided schema, we should check whether the constraint already exists
+			// idxConstr := s.findConstraint(tablename, *constraint.Conname)
+			// if idxConstr < 0 {
+			// 	s.Tables[tablename].Constraints.Items = append(s.Tables[tablename].Constraints.Items, constraint)
+			// } else {
+			// 	s.Tables[tablename].Constraints.Items[idxConstr] = constraint
+			// }
+			createStmt.Constraints.Items = append(createStmt.Constraints.Items, constraint)
+			// 		// case nodes.AT_DropConstraint:
+			// 		// 	idxConstr := s.findConstraint(idx, *cmd.Name)
+			// 		// 	if idxConstr < 0 && cmd.MissingOk {
+			// 		// 		return nil
+			// 		// 	} else if idxConstr < 0 {
+			// 		// 		return fmt.Errorf("could not find constraint")
+			// 		// 	}
+			// 		// 	constraints := s.Tables[idx].Constraints.Items
+			// 		// 	s.Tables[idx].Constraints.Items = append(constraints[:idxConstr], constraints[idxConstr+1:]...)
+			// 		// case nodes.AT_AddColumn:
+			// 		// columns := s.Tables[tablename].TableElts.Items
+			// 		// s.Tables[tablename].TableElts.Items = append(columns, def)
+			// 		// case nodes.AT_DropColumn:
+			// 		// 	columnIdx := s.findColumn(idx, *cmd.Name)
+			// 		// 	if columnIdx < 0 && cmd.MissingOk {
+			// 		// 		return nil
+			// 		// 	} else if columnIdx < 0 {
+			// 		// 		return fmt.Errorf("column to drop not found")
+			// 		// 	}
+			// 		// 	columns := s.Tables[idx].TableElts.Items
+			// 		// 	s.Tables[idx].TableElts.Items = append(columns[:columnIdx], columns[columnIdx+1:]...)
+			// 		// default:
+			// 		// 	log.Printf("Alter table type not supported: %d (https://github.com/lfittl/pg_query_go/blob/master/nodes/alter_table_type.go)\n", cmd.Subtype)
 		}
-
 	}
-
-	return nil
+	return &createStmt, nil
 }
 
-func (m *Mocker) dropTable(tableName string) error {
-	idx := m.findTable(tableName)
-	if idx < 0 {
-		return fmt.Errorf("table not found")
-	}
-	m.Tables = append(m.Tables[:idx], m.Tables[idx+1:]...)
-	return nil
-}
+// func dropTable(tableName string) error {
+// 	idx := s.findTable(tableName)
+// 	if idx < 0 {
+// 		return fmt.Errorf("table not found")
+// 	}
+// 	s.Tables = append(s.Tables[:idx], s.Tables[idx+1:]...)
+// 	return nil
+// }
 
-func (m *Mocker) createEnum(enum nodes.CreateEnumStmt) error {
-	m.Enums = append(m.Enums, enum)
-	return nil
-}
+// func createEnum(enum nodes.CreateEnumStmt) error {
+// 	s.Enums = append(s.Enums, enum)
+// 	return nil
+// }
 
-func (m *Mocker) findEnum(name string) int {
+// func findEnum(name string) int {
+// 	idx := -1
+// 	for i, enum := range s.Enums {
+// 		for _, v := range enus.TypeName.Items {
+// 			str, ok := v.(nodes.String)
+// 			if !ok {
+// 				continue
+// 			}
+// 			if str.Str == name {
+// 				idx = i
+// 			}
+// 		}
+// 	}
+// 	return idx
+// }
+
+// func findTable(tableName string) int {
+// 	idx := -1
+// 	for i, table := range s.Tables {
+// 		if *table.Relation.Relname == tableName {
+// 			idx = i
+// 		}
+// 	}
+// 	return idx
+// }
+
+// func findColumn(tableIdx int, columnName string) int {
+// 	idx := -1
+// 	columns := s.Tables[tableIdx].TableElts.Items
+// 	for i, item := range columns {
+// 		column, ok := ites.(nodes.ColumnDef)
+// 		if !ok { // is of type `nodes.Constraint`
+// 			continue
+// 		}
+// 		if *column.Colname == columnName {
+// 			idx = i
+// 		}
+// 	}
+// 	return idx
+// }
+
+func (s *Schema) findConstraint(tablename, constrName string) int {
 	idx := -1
-	for i, enum := range m.Enums {
-		for _, v := range enum.TypeName.Items {
-			str, ok := v.(nodes.String)
-			if !ok {
-				continue
-			}
-			if str.Str == name {
-				idx = i
-			}
-		}
-	}
-	return idx
-}
-
-func (m *Mocker) findTable(tableName string) int {
-	idx := -1
-	for i, table := range m.Tables {
-		if *table.Relation.Relname == tableName {
-			idx = i
-		}
-	}
-	return idx
-}
-
-func (m *Mocker) findColumn(tableIdx int, columnName string) int {
-	idx := -1
-	columns := m.Tables[tableIdx].TableElts.Items
-	for i, item := range columns {
-		column, ok := item.(nodes.ColumnDef)
-		if !ok { // is of type `nodes.Constraint`
-			continue
-		}
-		if *column.Colname == columnName {
-			idx = i
-		}
-	}
-	return idx
-}
-
-func (m *Mocker) findConstraint(tableIdx int, conName string) int {
-	idx := -1
-	constraints := m.Tables[tableIdx].Constraints.Items
+	constraints := s.Tables[tablename].Constraints.Items
 	for i, constr := range constraints {
 		c := constr.(nodes.Constraint)
-		if *c.Conname == conName {
+		if *c.Conname == constrName {
 			idx = i
 		}
 	}
 	return idx
 }
 
-func (m *Mocker) dropEnum(name string) error {
-	idx := m.findEnum(name)
-	if idx < 0 {
-		return fmt.Errorf("Could not find enum %s", name)
-	} else {
-		enums := m.Enums
-		m.Enums = append(enums[:idx], enums[idx+1:]...)
-	}
-	return nil
-}
+// func dropEnum(name string) error {
+// 	idx := s.findEnum(name)
+// 	if idx < 0 {
+// 		return fmt.Errorf("Could not find enum %s", name)
+// 	} else {
+// 		enums := s.Enums
+// 		s.Enums = append(enums[:idx], enums[idx+1:]...)
+// 	}
+// 	return nil
+// }

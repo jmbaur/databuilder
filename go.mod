@@ -4,6 +4,7 @@ go 1.14
 
 require (
 	github.com/brianvoe/gofakeit/v5 v5.11.0
+	github.com/davecgh/go-spew v1.1.1
 	github.com/gofrs/uuid v3.3.0+incompatible // indirect
 	github.com/jackc/pgmock v0.0.0-20201204152224-4fe30f7445fd // indirect
 	github.com/jackc/pgx/v4 v4.10.0

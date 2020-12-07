@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"bytes"
 	"database/sql"
 	"flag"
 	"fmt"
@@ -8,17 +9,19 @@ import (
 	"log"
 	"net/url"
 	"os"
+	"os/exec"
 	"path/filepath"
 
 	_ "github.com/lib/pq" // sql driver
-	"github.com/stretchr/testify/mock"
 
 	"github.com/jmbaur/databuilder/config"
-	"github.com/jmbaur/databuilder/db"
+	"github.com/jmbaur/databuilder/mock"
 )
 
 // Execute is the entrypoint of the program
 func Execute() {
+	log.SetOutput(os.Stderr)
+
 	connection := flag.String("connection", "postgres://localhost:5432", "Connection string to database")
 	configFile := flag.String("config", "mock.yml", "Path to config file")
 	outFile := flag.String("out", "", "Path to output file")
@@ -30,19 +33,25 @@ func Execute() {
 		log.Fatalf("could not get full path to config file %s: %v\n", *configFile, err)
 	}
 	cfgFile, err := os.Open(cfgFullPath)
+	if err != nil {
+		log.Printf("continuing without config file: %v\n", err)
+	}
 	cfg := config.Parse(cfgFile)
 
 	// get reader for SQL schema
-	args := flag.Args()
-	if len(args) != 1 {
-		log.Fatalln("did not specify where to read schema from")
-	}
-	schemaInputArg := flag.Args()[0]
-
 	var reader io.Reader
-	if schemaInputArg == "-" {
+	args := flag.Args()
+	if len(args) == 0 {
+		cmd := exec.Command("pg_dump", "-s", *connection)
+		output, err := cmd.Output()
+		if err != nil {
+			log.Fatalf("failed to execute '%s': %v\n", cmd, err)
+		}
+		reader = bytes.NewReader(output)
+	} else if flag.Args()[0] == "-" {
 		reader = os.Stdin
 	} else {
+		schemaInputArg := flag.Args()[0]
 		fullPath, err := filepath.Abs(schemaInputArg)
 		if err != nil {
 			log.Fatalf("could not get full path to schema file %s: %v\n", schemaInputArg, err)
@@ -63,51 +72,55 @@ func Execute() {
 		if err != nil {
 			log.Fatalf("could not get full path for file %s: %v\n", *outFile, err)
 		}
-		os.Remove(fullPath)
+		if err := os.Remove(fullPath); err != nil {
+			log.Printf("failed to remove file %s: %v\n", fullPath, err)
+		}
 		file, err := os.Create(fullPath)
 		if err != nil {
 			log.Fatalf("unable to create file %s: %v\n", fullPath, err)
 		}
 		writer = file
 	}
-	defer writer.Close()
+	defer func() {
+		if err := writer.Close(); err != nil {
+			log.Printf("failed to close writer: %v\n", err)
+		}
+	}()
 
 	// get connection to database
 	parsedURL, err := url.Parse(*connection)
 	if err != nil {
 		log.Fatalf("could not parse connection string %s: %v\n", *connection, err)
 	}
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	// pq defaults sslmode=require, should we explicitly add sslmode=disable to the connection string arg?
 	// v := parsedURL.Query()
 	// v.Set("sslmode", "disable")
 	// parsedURL.RawQuery = v.Encode()
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	connStr := fmt.Sprint(parsedURL)
 
 	conn, err := sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatalf("unable to connect to database at %s: %v\n", *connection, err)
 	}
-	defer conn.Close()
+	defer func() {
+		if err := conn.Close(); err != nil {
+			log.Printf("failed to close database connection: %v\n", err)
+		}
+	}()
 
-	rows, err := conn.Query("SELECT now()")
-	if err != nil {
-		log.Fatal("failed to query database: ", err)
-	}
-	defer rows.Close()
-	for rows.Next() {
-		var date string
-		rows.Scan(&date)
-		fmt.Printf("%+v\n", date)
-	}
+	// schema := mock.Parse(reader, &cfg)
+	mock.Parse(reader, &cfg)
 
-	fmt.Println("IGNORE")
-	fmt.Println(cfg, reader)
+	// spew.Dump(schema)
+	os.Exit(1)
 
-	queryChan := make(chan db.Query)
-	resultChan := make(chan db.Result)
-	insertChan := make(chan db.Record)
+	// queryChan := make(chan db.Query)
+	// resultChan := make(chan db.Result)
+	// insertChan := make(chan db.Record)
 
-	go mock.Mock(queryChan, resultChan, insertChan, cfg, reader)
-	go db.ListenForQueries(queryChan, resultChan)
-	db.Insert(insertChan, conn, writer)
+	// go mock.Mock(queryChan, resultChan, insertChan, schema)
+	// go db.ListenForQueries(queryChan, resultChan)
+	// db.Insert(insertChan, conn, writer)
 }

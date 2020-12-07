@@ -23,7 +23,7 @@ type Record struct {
 }
 
 func (q *Query) String() string {
-	return fmt.Sprintf("SELECT %s FROM %s;", q.Column, q.Table)
+	return fmt.Sprintf("SELECT %s FROM %s ORDER BY random() LIMIT 1;", q.Column, q.Table)
 }
 
 func (r *Record) String() (str string) {
